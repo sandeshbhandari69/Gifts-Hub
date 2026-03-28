@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Inventory;
 use App\Models\Order;
 use App\Models\Purchase;
@@ -10,17 +12,64 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
-    public function signup()
-    {
-        return view('admin/signup');
-    }
     public function login()
     {
         return view('admin/login');
     }
+    
+    public function loginPost(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            
+            // Check if user is admin (you may want to modify this based on your user table structure)
+            if (Auth::user()->role === 'admin' || Auth::user()->is_admin === 1) {
+                return redirect()->intended('admin')->with('success', 'Welcome back, Admin!');
+            }
+            
+            return redirect()->intended('admin')->with('success', 'Login successful!');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }
+    
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('admin.login')->with('success', 'You have been logged out successfully.');
+    }
     public function forget()
     {
         return view('admin/forget');
+    }
+    
+    public function forgetPost(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        
+        if ($user && $user->role === 'admin') {
+            // Use the user-provided password
+            $user->password = Hash::make($request->password);
+            $user->save();
+            
+            return redirect()->route('admin.login')->with('success', 'Your password has been successfully reset. You can now log in with your new password.');
+        } elseif ($user) {
+            return back()->with('error', 'This email is not registered as an admin account.');
+        }
+        
+        return back()->with('error', 'Email not found in our system.');
     }
     public function index()
     {
