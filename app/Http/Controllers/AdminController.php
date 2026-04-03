@@ -9,6 +9,8 @@ use App\Models\Inventory;
 use App\Models\Order;
 use App\Models\Purchase;
 use App\Models\User;
+use App\Models\Product;
+use App\Models\Category;
 
 class AdminController extends Controller
 {
@@ -102,21 +104,26 @@ class AdminController extends Controller
 
     public function inventory(Request $request)
     {
-        $query = Inventory::query();
+        $query = Inventory::with('product.category');
 
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('product_name', 'like', "%{$search}%")
-                  ->orWhere('product_id', 'like', "%{$search}%")
-                  ->orWhere('category', 'like', "%{$search}%");
+                $q->whereHas('product', function($subQuery) use ($search) {
+                    $subQuery->where('p_name', 'like', "%{$search}%");
+                })->orWhere('product_id', 'like', "%{$search}%")
+                  ->orWhereHas('product.category', function($subQuery) use ($search) {
+                      $subQuery->where('c_name', 'like', "%{$search}%");
+                  });
             });
         }
 
         // Filter by category
         if ($request->has('category') && !empty($request->category)) {
-            $query->where('category', $request->category);
+            $query->whereHas('product.category', function($q) use ($request) {
+                $q->where('c_name', $request->category);
+            });
         }
 
         // Filter by location
@@ -129,7 +136,7 @@ class AdminController extends Controller
                             ->withQueryString();
 
         // Get unique categories and locations for filters
-        $categories = Inventory::distinct()->pluck('category');
+        $categories = Category::orderBy('c_name')->pluck('c_name');
         $locations = Inventory::distinct()->pluck('location');
 
         return view('admin.inventory', compact('inventories', 'categories', 'locations'));
@@ -137,17 +144,15 @@ class AdminController extends Controller
 
     public function inventoryCreate()
     {
-        $categories = ['Gadgets', 'Combo Gifts', 'Birthday Gifts', 'Personalized', 'Valentines', 'Anniversary Gifts', 'Flower', 'Christmas'];
+        $products = Product::with('category')->get();
         $locations = ['Warehouse 1', 'Warehouse 2', 'Warehouse 3', 'Warehouse 4', 'Warehouse 5'];
-        return view('admin.add-inventory', compact('categories', 'locations'));
+        return view('admin.add-inventory', compact('products', 'locations'));
     }
 
     public function inventoryStore(Request $request)
     {
         $request->validate([
-            'product_name' => 'required|string|max:255',
-            'product_id' => 'required|string|unique:inventories,product_id|max:50',
-            'category' => 'required|string|max:100',
+            'product_id' => 'required|exists:products,p_id|unique:inventories,product_id',
             'location' => 'required|string|max:100',
             'available' => 'required|integer|min:0',
             'reserved' => 'required|integer|min:0',
@@ -157,9 +162,7 @@ class AdminController extends Controller
         ]);
 
         Inventory::create([
-            'product_name' => $request->product_name,
             'product_id' => $request->product_id,
-            'category' => $request->category,
             'location' => $request->location,
             'available_quantity' => $request->available,
             'reserved_quantity' => $request->reserved,
@@ -174,10 +177,10 @@ class AdminController extends Controller
 
     public function inventoryEdit($id)
     {
-        $inventory = Inventory::findOrFail($id);
-        $categories = ['Gadgets', 'Combo Gifts', 'Birthday Gifts', 'Personalized', 'Valentines', 'Anniversary Gifts', 'Flower', 'Christmas'];
+        $inventory = Inventory::with('product.category')->findOrFail($id);
+        $products = Product::with('category')->get();
         $locations = ['Warehouse 1', 'Warehouse 2', 'Warehouse 3', 'Warehouse 4', 'Warehouse 5'];
-        return view('admin.edit-inventory', compact('inventory', 'categories', 'locations'));
+        return view('admin.edit-inventory', compact('inventory', 'products', 'locations'));
     }
 
     public function inventoryUpdate(Request $request, $id)
@@ -185,9 +188,7 @@ class AdminController extends Controller
         $inventory = Inventory::findOrFail($id);
 
         $request->validate([
-            'product_name' => 'required|string|max:255',
-            'product_id' => 'required|string|max:50|unique:inventories,product_id,' . $id,
-            'category' => 'required|string|max:100',
+            'product_id' => 'required|exists:products,p_id|unique:inventories,product_id,' . $id,
             'location' => 'required|string|max:100',
             'available' => 'required|integer|min:0',
             'reserved' => 'required|integer|min:0',
@@ -197,9 +198,7 @@ class AdminController extends Controller
         ]);
 
         $inventory->update([
-            'product_name' => $request->product_name,
             'product_id' => $request->product_id,
-            'category' => $request->category,
             'location' => $request->location,
             'available_quantity' => $request->available,
             'reserved_quantity' => $request->reserved,
@@ -223,7 +222,7 @@ class AdminController extends Controller
 
     public function inventoryShow($id)
     {
-        $inventory = Inventory::findOrFail($id);
+        $inventory = Inventory::with('product.category')->findOrFail($id);
         return view('admin.view-inventory', compact('inventory'));
     }
 
