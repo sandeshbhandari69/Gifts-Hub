@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Inventory;
 
 class ProductController extends Controller
 {
@@ -36,6 +37,18 @@ class ProductController extends Controller
             'p_stock' => $request->p_stock,
             'p_description' => $request->p_description,
             'p_image' => $imagePath,
+        ]);
+
+        // Automatically create inventory entry for new product
+        $product = Product::latest()->first();
+        Inventory::create([
+            'product_id' => $product->p_id,
+            'location' => 'Warehouse 1', // Default location
+            'available_quantity' => $request->p_stock,
+            'reserved_quantity' => 0,
+            'on_hand_quantity' => $request->p_stock,
+            'unit_cost' => 0, // Default cost
+            'description' => 'Auto-created inventory entry for ' . $request->p_name,
         ]);
 
         return redirect()->route('admin.view-product')->with('success', 'Product added successfully!');

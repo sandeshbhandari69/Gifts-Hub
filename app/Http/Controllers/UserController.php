@@ -333,11 +333,10 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user', // Default role for email registration
         ]);
 
-        Auth::login($user);
-
-        return redirect()->route('login')->with('success', 'Registration successful! Please login.');
+        return redirect()->route('login')->with('success', 'Registration successful! Please login to continue.');
     }
 
     public function loginPost(Request $request)
