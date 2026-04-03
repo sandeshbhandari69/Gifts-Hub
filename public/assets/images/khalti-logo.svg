@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 60">
+  <!-- White background rectangle with purple border -->
+  <rect x="0" y="0" width="180" height="60" fill="white" stroke="#6C63FF" stroke-width="2" rx="4"/>
+  
+  <!-- Purple shield shape -->
+  <path d="M 20 15 L 20 35 Q 20 45 30 50 L 35 52 Q 40 54 45 52 L 50 50 Q 60 45 60 35 L 60 15 L 40 8 Z" fill="#6C63FF"/>
+  
+  <!-- White K letter inside shield -->
+  <text x="40" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">K</text>
+  
+  <!-- khalti text in purple -->
+  <text x="75" y="35" font-family="Arial, sans-serif" font-size="18" font-weight="500" fill="#6C63FF">khalti</text>
+</svg>
