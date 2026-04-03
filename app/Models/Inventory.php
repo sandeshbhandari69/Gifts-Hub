@@ -10,9 +10,7 @@ class Inventory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_name',
         'product_id',
-        'category',
         'location',
         'available_quantity',
         'reserved_quantity',
@@ -27,6 +25,21 @@ class Inventory extends Model
         'on_hand_quantity' => 'integer',
         'unit_cost' => 'decimal:2',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'p_id');
+    }
+
+    public function getProductNameAttribute()
+    {
+        return $this->product ? $this->product->p_name : 'N/A';
+    }
+
+    public function getCategoryAttribute()
+    {
+        return $this->product && $this->product->category ? $this->product->category->c_name : 'N/A';
+    }
 
     public function getStockStatusAttribute()
     {

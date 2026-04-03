@@ -21,6 +21,11 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'c_id');
     }
 
+    public function inventory()
+    {
+        return $this->hasOne(Inventory::class, 'product_id', 'p_id');
+    }
+
     protected $primaryKey = 'p_id';
 
 }
