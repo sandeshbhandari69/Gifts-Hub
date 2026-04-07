@@ -20,12 +20,11 @@
                                     @if(isset($order->billing))
                                         {{ $order->billing['first_name'] }} {{ $order->billing['last_name'] }}<br>
                                         {{ $order->billing['address'] }}<br>
-                                        {{ $order->billing['city'] }}, {{ $order->billing['state'] }} {{ $order->billing['pin_code'] }}<br>
-                                        {{ $order->billing['country'] }}
+                                        {{ $order->billing['country'] }} {{ $order->billing['pin_code'] }}
                                     @else
                                         Sandesh Shrestha<br>
                                         123 Main Street<br>
-                                        Kathmandu, Nepal 44600
+                                        Nepal 44600
                                     @endif
                                 </h6>
                                 <span class="text-dark"><strong>Email:</strong> {{ $order->billing['email'] ?? 'sandesh@example.com' }}</span><br>
@@ -115,14 +114,18 @@
                                         @if(isset($order->items) && count($order->items) > 0)
                                             @foreach($order->items as $item)
                                             <tr>
-                                            <th>
+                                            <td>
                                                 <div class="d-flex">
                                                     <div>    
-                                                        <img src="{{ asset($item['image']) }}" class="img-fluid rounded" style="width: 70px;" alt="{{ $item['name'] }}">
+                                                        @if(!empty($item['image']))
+                                                            <img src="{{ asset($item['image']) }}" class="img-fluid rounded" style="width: 70px;" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('assets/images/Product/1.png') }}'">
+                                                        @else
+                                                            <img src="{{ asset('assets/images/Product/1.png') }}" class="img-fluid rounded" style="width: 70px;" alt="{{ $item['name'] }}">
+                                                        @endif
                                                         </div>
                                                         <div class="p-3"><h6>{{ $item['name'] }}</h6></div>
                                                     </div>
-                                                </th>
+                                                </td>
                                                 <td>Rs. {{ number_format((float)str_replace(['$', 'Rs.', 'Rs '],'',$item['price']),2) }}</td>
                                                 <td>{{ $item['quantity'] }}</td>
                                                 <td>Rs. {{ number_format((float)str_replace(['$', 'Rs.', 'Rs '],'',$item['price']) * $item['quantity'],2) }}</td>
@@ -131,28 +134,28 @@
                                         @else
                                             <!-- Sample order items for demo/sample orders -->
                                             <tr>
-                                            <th>
+                                            <td>
                                                 <div class="d-flex">
                                                     <div>    
-                                                        <img src="{{ asset('assets/images/SubCategory/Gadgets/watch.png') }}" class="img-fluid rounded" style="width: 70px;" alt="Mar Watch">
+                                                        <img src="{{ asset('assets/images/SubCategory/Gadgets/watch.png') }}" class="img-fluid rounded" style="width: 70px;" alt="Mar Watch" onerror="this.src='{{ asset('assets/images/Product/1.png') }}'">
                                                         </div>
                                                         <div class="p-3"><h6>Mar Watch</h6></div>
                                                 </div>
-                                            </th>
+                                            </td>
                                             <td>Rs. 100</td>
                                             <td>01</td>
                                             <td>Rs. 100</td>
                                             </tr>
 
                                             <tr>
-                                            <th>
+                                            <td>
                                                 <div class="d-flex">
                                                     <div>    
-                                                        <img src="{{ asset('assets/images/Product/2.png') }}" class="img-fluid rounded" style="width: 70px;" alt="Cake">
+                                                        <img src="{{ asset('assets/images/Product/2.png') }}" class="img-fluid rounded" style="width: 70px;" alt="Cake" onerror="this.src='{{ asset('assets/images/Product/1.png') }}'">
                                                     </div>
                                                     <div class="p-3"><h6>Cake</h6></div>
                                                 </div>
-                                            </th>
+                                            </td>
                                             <td>Rs. 50</td>
                                             <td>01</td>
                                             <td>Rs. 50</td>

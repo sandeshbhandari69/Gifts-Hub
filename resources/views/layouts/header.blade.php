@@ -3,12 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @stack('title')
     <title>Home Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{{ asset('assets/css/style.css' ) }}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    @stack('styles')
   </head>
   <body>
     <nav class="navbar navbar-expand-lg theme-navbar">
@@ -36,11 +38,11 @@
           <a class="nav-link text-dark px-2" href="{{ route('about') }}">About Us</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark px-2" href="{{ route('contact') }}">Contact Us</a>
+          <a class="nav-link text-dark px-2" href="{{ route('contact.index') }}">Contact Us</a>
         </li>
       </ul>
 
-      <form class="d-flex mx-auto mb-2 mb-lg-0 d-none d-lg-block" role="search" action="{{ route('search') }}" method="GET" style="flex: 1; max-width: 500px; margin: 0 4rem;">
+      <form class="d-flex mx-auto mb-2 mb-lg-0 d-none d-lg-block" role="search" action="{{ route('search') }}" method="GET" style="flex: 1; max-width: 300px; margin: 0 1rem;">
         <div class="search-modern position-relative">
             <input class="form-control form-control-sm border-0" type="search" name="q" id="searchInput" placeholder="Search for gifts, products..." aria-label="Search" autocomplete="off"/>
             <button class="btn btn-sm search-btn" type="submit">
@@ -51,10 +53,17 @@
       </form>
 
       <div class="d-flex align-items-center gap-2">
-        <a href="{{url('cart-list/product')}}" class="btn btn-custom-black btn-sm rounded-pill px-2 py-2">
-            <i class="fa-solid fa-cart-shopping me-1"></i>
-            <span class="d-none d-md-inline">Cart</span>
-        </a>
+        @auth
+            <a href="{{url('cart-list/product')}}" class="btn btn-custom-black btn-sm rounded-pill px-2 py-2">
+                <i class="fa-solid fa-cart-shopping me-1"></i>
+                <span class="d-none d-md-inline">Cart</span>
+            </a>
+        @else
+            <a href="{{url('register1')}}" class="btn btn-custom-black btn-sm rounded-pill px-2 py-2" onclick="showLoginMessage(event)">
+                <i class="fa-solid fa-cart-shopping me-1"></i>
+                <span class="d-none d-md-inline">Cart</span>
+            </a>
+        @endauth
         <a href="{{ route('wishlist.index') }}" class="btn btn-custom-black btn-sm rounded-pill px-2 py-2">
             <i class="fa-regular fa-heart me-1"></i>
             <span class="d-none d-md-inline">Wishlist</span>
@@ -75,7 +84,7 @@
                     </a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <form action="{{ route('logout') }}" method="POST" class="m-0">
+                        <form action="{{ route('user.logout') }}" method="POST" class="m-0">
                             @csrf
                             <button type="submit" class="dropdown-item text-danger w-100 text-start" style="display: block; width: 100%; padding: 0.5rem 1rem; background: transparent; border: none; text-align: left;">
                                 <i class="fa-solid fa-sign-out-alt me-2"></i>Logout
@@ -153,5 +162,12 @@ function selectSuggestion(name) {
     document.getElementById('searchInput').value = name;
     document.getElementById('autocompleteResults').style.display = 'none';
     document.querySelector('form[role="search"]').submit();
+}
+
+function showLoginMessage(event) {
+    event.preventDefault();
+    if (confirm('Please login to access your cart. Would you like to login now?')) {
+        window.location.href = '{{ url("register1") }}';
+    }
 }
 </script>

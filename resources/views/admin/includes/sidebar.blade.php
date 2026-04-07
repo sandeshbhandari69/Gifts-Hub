@@ -31,6 +31,11 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                         <h6>Manage Users</h6>
                     </a>
+                    
+                    <a class="nav-link" href="{{ route('admin.orders.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <h6>Manage Orders</h6>
+                    </a>
                 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button"

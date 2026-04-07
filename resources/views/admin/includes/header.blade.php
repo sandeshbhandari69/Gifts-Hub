@@ -31,10 +31,14 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{{url('/')}}"target="_blank">Go to Website</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
-                        <form id="logout-form" method="POST" action="{{ route('admin.logout') }}" style="display: none;">
-                            @csrf
-                        </form>
+                        <li>
+                            <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger w-100 text-start" style="display: block; width: 100%; padding: 0.5rem 1rem; background: transparent; border: none; text-align: left;">
+                                    <i class="fa-solid fa-sign-out-alt me-2"></i>Logout
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </li>
             </ul>
