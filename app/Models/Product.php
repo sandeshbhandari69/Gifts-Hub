@@ -13,7 +13,8 @@ class Product extends Model
     'c_id',
     'p_stock',
     'p_description',
-    'p_image'
+    'p_image',
+    'status'
     ];
 
     function category()
@@ -24,6 +25,17 @@ class Product extends Model
     public function inventory()
     {
         return $this->hasOne(Inventory::class, 'product_id', 'p_id');
+    }
+
+    public function getStatusBadgeAttribute()
+    {
+        return match($this->status) {
+            'active' => '<span class="badge rounded-pill bg-success">Active</span>',
+            'inactive' => '<span class="badge rounded-pill bg-secondary">Inactive</span>',
+            'out_of_stock' => '<span class="badge rounded-pill bg-danger">Out of Stock</span>',
+            'discontinued' => '<span class="badge rounded-pill bg-dark">Discontinued</span>',
+            default => '<span class="badge rounded-pill bg-warning">Unknown</span>'
+        };
     }
 
     protected $primaryKey = 'p_id';
