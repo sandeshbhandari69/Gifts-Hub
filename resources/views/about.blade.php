@@ -4,391 +4,483 @@
     <title>About Us - Gifts Hub</title>
 @endpush
 
-@section('content')
-
-{{-- Google Fonts loaded directly inside content so it always works --}}
+@push('styles')
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-/* ── Reset scoped to about page ── */
+/* ── Scoped reset ── */
 .ab-wrap, .ab-wrap * { box-sizing: border-box; }
 
-/* ── CSS Variables ── */
+/* ── Variables ── */
 .ab-wrap {
-    --ink:      #1a1a1a;
-    --soft:     #444444;
-    --muted:    #999999;
-    --accent:   #c4956a;
-    --accent-l: #f0e0cf;
-    --bg:       #f9f7f4;
-    --white:    #ffffff;
-    --line:     #e6e0d8;
+    --ab-dark:       #1a2035;
+    --ab-mid:        #3a4a6b;
+    --ab-accent:     #c4522a;
+    --ab-gold:       #d4956a;
+    --ab-bg:         #ffffff;
+    --ab-surface:    #faf8f5;
+    --ab-border:     #e8e0d6;
+    --ab-border-mid: #ede8e0;
+    --ab-text:       #1a1a1a;
+    --ab-soft:       #555555;
+    --ab-muted:      #999999;
+    --ab-radius:     12px;
+    --ab-transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    --ab-font-d:     'Cormorant Garamond', Georgia, serif;
+    --ab-font-b:     'DM Sans', sans-serif;
 
-    background: var(--bg);
-    min-height: calc(100vh - 200px);
-    padding: 80px 0 110px;
-    font-family: 'Outfit', sans-serif;
-    color: var(--ink);
+    background: var(--ab-bg);
+    font-family: var(--ab-font-b);
+    color: var(--ab-text);
 }
 
-/* ── Layout container ── */
-.ab-inner {
-    width: min(960px, 88%);
-    margin: 0 auto;
+/* ════════════════════════════
+   PAGE HEADER  (matches categories page gradient)
+════════════════════════════ */
+.ab-header {
+    background: linear-gradient(120deg, var(--ab-dark) 0%, var(--ab-mid) 38%, #8a9ab5 68%, #ddd8d0 88%, #f5f0eb 100%);
+    padding: 60px 0 56px;
+    position: relative;
+    overflow: hidden;
 }
-
-/* ────────────────────────────────
-   HERO
-──────────────────────────────── */
-.ab-hero {
-    padding-bottom: 64px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 64px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: end;
+.ab-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 60% 80% at 8% 50%, rgba(196,82,42,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 60% at 92% 30%, rgba(212,149,106,0.08) 0%, transparent 50%);
+    pointer-events: none;
 }
-
-.ab-hero-left { }
-
-.ab-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 28px;
-}
-.ab-tag-line {
-    width: 32px; height: 1px;
-    background: var(--accent);
-    display: block;
-}
-.ab-tag-text {
-    font-size: 13px;
-    letter-spacing: 3.5px;
+.ab-header .container { position: relative; z-index: 1; }
+.ab-header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    color: var(--accent);
+    color: rgba(245,240,235,0.50);
+    font-weight: 500;
+    margin-bottom: 14px;
+}
+.ab-header-title {
+    font-family: var(--ab-font-d);
+    font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+    font-weight: 300;
+    color: #f5f0eb;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+}
+.ab-header-title em {
+    font-style: italic;
+    color: var(--ab-gold);
+}
+.ab-header-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(245,240,235,0.62);
+    max-width: 460px;
+    line-height: 1.75;
+    margin: 0;
+}
+
+/* ════════════════════════════
+   STATS BAR
+════════════════════════════ */
+.ab-stats-bar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--ab-border-mid);
+    padding: 28px 0;
+}
+.ab-stats-inner {
+    display: flex;
+    gap: 0;
+}
+.ab-stat {
+    flex: 1;
+    padding: 0 32px;
+    border-right: 1px solid var(--ab-border-mid);
+    text-align: center;
+}
+.ab-stat:first-child { padding-left: 0; text-align: left; }
+.ab-stat:last-child  { border-right: none; }
+.ab-stat-number {
+    font-family: var(--ab-font-d);
+    font-size: 2.4rem;
+    font-weight: 300;
+    color: var(--ab-accent);
+    display: block;
+    line-height: 1;
+}
+.ab-stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--ab-muted);
+    margin-top: 5px;
+    display: block;
     font-weight: 500;
 }
 
-.ab-hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(52px, 6.5vw, 80px);
-    font-weight: 300;
-    line-height: 1.05;
-    letter-spacing: -0.5px;
-    color: var(--ink);
-    margin: 0;
-}
-.ab-hero-title em {
-    font-style: italic;
-    color: var(--accent);
+/* ════════════════════════════
+   MAIN CONTENT WRAPPER
+════════════════════════════ */
+.ab-main {
+    padding: 68px 0 90px;
 }
 
-.ab-hero-right {
-    padding-bottom: 6px;
+/* ════════════════════════════
+   SECTION ROWS
+════════════════════════════ */
+.ab-section {
+    margin-bottom: 68px;
 }
-
-.ab-hero-body {
-    font-size: 1.15rem;
-    font-weight: 300;
-    line-height: 1.9;
-    color: var(--soft);
-    border-left: 2px solid var(--accent);
-    padding-left: 22px;
-    margin: 0;
-}
-
-/* ────────────────────────────────
-   MISSION
-──────────────────────────────── */
-.ab-mission {
+.ab-section-row {
     display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 48px;
-    margin-bottom: 72px;
+    grid-template-columns: 200px 1fr;
+    gap: 52px;
     align-items: start;
 }
-
 .ab-section-label {
-    font-size: 13px;
+    font-size: 11px;
     letter-spacing: 3.5px;
     text-transform: uppercase;
-    color: var(--muted);
-    padding-top: 4px;
-    font-weight: 500;
+    color: var(--ab-accent);
+    font-weight: 600;
+    padding-top: 6px;
+    line-height: 1;
 }
-
-.ab-mission-content { }
-
-.ab-mission-headline {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(28px, 3.5vw, 40px);
+.ab-section-heading {
+    font-family: var(--ab-font-d);
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
     font-weight: 300;
-    color: var(--ink);
+    color: var(--ab-text);
     line-height: 1.35;
-    margin: 0 0 22px 0;
+    margin-bottom: 22px;
 }
-
-.ab-mission-para {
-    font-size: 1.05rem;
+.ab-section-para {
+    font-size: 15px;
     font-weight: 300;
-    color: var(--soft);
-    line-height: 1.85;
-    margin: 0 0 14px 0;
+    color: var(--ab-soft);
+    line-height: 1.88;
+    margin-bottom: 14px;
 }
-.ab-mission-para:last-child { margin-bottom: 0; }
+.ab-section-para:last-child { margin-bottom: 0; }
 
-/* ────────────────────────────────
-   VALUES
-──────────────────────────────── */
-.ab-values-section {
-    margin-bottom: 72px;
-}
-
-.ab-values-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 28px;
-}
-.ab-values-header-line {
-    flex: 1;
+/* ════════════════════════════
+   HORIZONTAL DIVIDER
+════════════════════════════ */
+.ab-divider {
     height: 1px;
-    background: var(--line);
+    background: var(--ab-border-mid);
+    margin-bottom: 68px;
 }
 
+/* ════════════════════════════
+   VALUES GRID
+════════════════════════════ */
 .ab-values-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
 }
-
 .ab-val {
-    background: var(--white);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 32px 26px 28px;
+    background: var(--ab-surface);
+    border: 1.5px solid var(--ab-border);
+    border-radius: var(--ab-radius);
+    padding: 28px 22px 24px;
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+    transition: var(--ab-transition);
     cursor: default;
 }
-
 .ab-val::before {
     content: '';
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 3px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.35s ease;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ab-accent), var(--ab-gold));
+    opacity: 0;
+    transition: var(--ab-transition);
+    border-radius: 0;
 }
-
 .ab-val:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.09);
-    border-color: transparent;
+    border-color: var(--ab-accent);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(26,32,53,0.09);
 }
-.ab-val:hover::before { transform: scaleX(1); }
-
+.ab-val:hover::before { opacity: 1; }
 .ab-val-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 48px;
+    font-family: var(--ab-font-d);
+    font-size: 2.8rem;
     font-weight: 300;
-    color: var(--accent-l);
-    line-height: 1;
-    margin-bottom: 16px;
+    color: #e8d4c4;
     display: block;
+    line-height: 1;
+    margin-bottom: 14px;
 }
-
-.ab-val-name {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 10px;
-    letter-spacing: 0.2px;
-}
-
-.ab-val-desc {
+.ab-val-title {
     font-size: 15px;
-    font-weight: 300;
-    color: var(--muted);
-    line-height: 1.75;
+    font-weight: 600;
+    color: var(--ab-text);
+    margin-bottom: 8px;
 }
-
-/* ────────────────────────────────
-   CLOSING BANNER
-──────────────────────────────── */
-.ab-banner {
-    background: var(--ink);
-    border-radius: 6px;
-    padding: 50px 52px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 40px;
-    align-items: center;
-}
-
-.ab-banner-quote {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(24px, 3vw, 36px);
+.ab-val-desc {
+    font-size: 13.5px;
     font-weight: 300;
-    font-style: italic;
-    color: rgba(255,255,255,0.92);
-    line-height: 1.45;
+    color: var(--ab-muted);
+    line-height: 1.72;
     margin: 0;
 }
-.ab-banner-quote em {
-    color: var(--accent);
+
+/* ════════════════════════════
+   QUOTE / FOUNDER BANNER
+════════════════════════════ */
+.ab-quote-banner {
+    background: var(--ab-surface);
+    border: 1.5px solid var(--ab-border);
+    border-left: 4px solid var(--ab-accent);
+    border-radius: 0 var(--ab-radius) var(--ab-radius) 0;
+    padding: 40px 44px;
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+}
+.ab-quote-mark {
+    font-family: var(--ab-font-d);
+    font-size: 5.5rem;
+    color: #e8d4c4;
+    line-height: 0.75;
+    flex-shrink: 0;
+    margin-top: 6px;
+    user-select: none;
+}
+.ab-quote-content {}
+.ab-quote-text {
+    font-family: var(--ab-font-d);
+    font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ab-text);
+    line-height: 1.55;
+    margin-bottom: 22px;
+}
+.ab-quote-text em {
     font-style: normal;
+    color: var(--ab-accent);
     font-weight: 400;
 }
-
-.ab-banner-sig { text-align: right; }
-
-.ab-banner-name {
-    font-size: 17px;
-    font-weight: 500;
-    color: #ffffff;
-    display: block;
-    letter-spacing: 0.3px;
+.ab-quote-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
-
-.ab-banner-role {
-    font-size: 13px;
-    color: rgba(255,255,255,0.38);
-    letter-spacing: 2px;
+.ab-quote-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--ab-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f5f0eb;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+    font-family: var(--ab-font-b);
+}
+.ab-quote-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ab-text);
+    display: block;
+}
+.ab-quote-role {
+    font-size: 10px;
     text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--ab-muted);
+    margin-top: 3px;
     display: block;
-    margin-top: 6px;
+    font-weight: 500;
 }
 
-/* ────────────────────────────────
+/* ════════════════════════════
    ANIMATIONS
-──────────────────────────────── */
-.ab-fade { opacity: 0; animation: abRise 0.65s ease forwards; }
+════════════════════════════ */
+.ab-fade {
+    opacity: 0;
+    animation: abRise 0.6s ease forwards;
+}
 .ab-fade:nth-child(1) { animation-delay: 0.05s; }
 .ab-fade:nth-child(2) { animation-delay: 0.15s; }
 .ab-fade:nth-child(3) { animation-delay: 0.25s; }
 .ab-fade:nth-child(4) { animation-delay: 0.35s; }
-.ab-fade:nth-child(5) { animation-delay: 0.45s; }
 
 @keyframes abRise {
-    from { opacity: 0; transform: translateY(24px); }
+    from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ────────────────────────────────
+/* ════════════════════════════
    RESPONSIVE
-──────────────────────────────── */
-@media (max-width: 768px) {
-    .ab-wrap { padding: 60px 0 80px; }
+════════════════════════════ */
+@media (max-width: 767px) {
+    .ab-header { padding: 44px 0 40px; }
 
-    .ab-hero {
-        grid-template-columns: 1fr;
-        gap: 32px;
-    }
-
-    .ab-mission {
-        grid-template-columns: 1fr;
+    .ab-stats-inner {
+        flex-direction: column;
         gap: 20px;
     }
+    .ab-stat {
+        padding: 0 0 20px;
+        border-right: none;
+        border-bottom: 1px solid var(--ab-border-mid);
+        text-align: left;
+    }
+    .ab-stat:last-child { border-bottom: none; padding-bottom: 0; }
 
+    .ab-main { padding: 44px 0 60px; }
+
+    .ab-section-row {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
     .ab-values-grid {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-
-    .ab-banner {
-        grid-template-columns: 1fr;
-        gap: 24px;
-        padding: 36px 28px;
+    .ab-quote-banner {
+        flex-direction: column;
+        gap: 16px;
+        padding: 28px 24px;
+        border-left-width: 3px;
     }
+    .ab-quote-mark { display: none; }
+}
 
-    .ab-banner-sig { text-align: left; }
+@media (min-width: 768px) and (max-width: 1024px) {
+    .ab-values-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
+@endpush
+
+@section('content')
 
 <div class="ab-wrap">
-<div class="ab-inner">
 
-    {{-- ── HERO ── --}}
-    <div class="ab-hero ab-fade">
-        <div class="ab-hero-left">
-            <div class="ab-tag">
-                <span class="ab-tag-line"></span>
-                <span class="ab-tag-text">Our Story</span>
-            </div>
-            <h1 class="ab-hero-title">
+    {{-- ── PAGE HEADER (same gradient as categories) ── --}}
+    <div class="ab-header ab-fade">
+        <div class="container">
+            <p class="ab-header-eyebrow">Gifts Hub &nbsp;&middot;&nbsp; Our Story</p>
+            <h1 class="ab-header-title">
                 Gifts that say<br>
-                <em>exactly</em> what<br>
-                you feel.
+                <em>exactly</em> what you feel.
             </h1>
-        </div>
-        <div class="ab-hero-right">
-            <p class="ab-hero-body">
-                Gifts Hub was founded in 2024 with a simple belief — the right gift can say everything words cannot. We curate thoughtful, beautiful presents for every occasion, making the art of gifting effortless for everyone.
+            <p class="ab-header-sub">
+                Founded in 2024 with a simple belief — the right gift can say everything words cannot. We curate thoughtful, beautiful presents for every occasion.
             </p>
         </div>
     </div>
 
-    {{-- ── MISSION ── --}}
-    <div class="ab-mission ab-fade">
-        <p class="ab-section-label">Our Mission</p>
-        <div class="ab-mission-content">
-            <h2 class="ab-mission-headline">
-                To make every moment of giving feel as special as the moment of receiving.
-            </h2>
-            <p class="ab-mission-para">
-                We believe gifting is one of the most human things we do. Behind every wrapped box is a relationship, a memory, a feeling. Our role is to help you find the gift that carries all of that — effortlessly, beautifully, and with care.
-            </p>
-            <p class="ab-mission-para">
-                From birthdays and anniversaries to festivals and milestones, Gifts Hub is built to make you feel confident in every gift you give.
-            </p>
-        </div>
-    </div>
-
-    {{-- ── VALUES ── --}}
-    <div class="ab-values-section ab-fade">
-        <div class="ab-values-header">
-            <span class="ab-section-label">What we stand for</span>
-            <span class="ab-values-header-line"></span>
-        </div>
-        <div class="ab-values-grid">
-            <div class="ab-val">
-                <span class="ab-val-num">01</span>
-                <p class="ab-val-name">Thoughtful Curation</p>
-                <p class="ab-val-desc">Every product in our store is handpicked for quality, meaning, and that "wow" factor.</p>
-            </div>
-            <div class="ab-val">
-                <span class="ab-val-num">02</span>
-                <p class="ab-val-name">Personal Touch</p>
-                <p class="ab-val-desc">We design the gifting experience to feel personal — never generic, never rushed.</p>
-            </div>
-            <div class="ab-val">
-                <span class="ab-val-num">03</span>
-                <p class="ab-val-name">Trusted Quality</p>
-                <p class="ab-val-desc">We stand behind every item. If it doesn't meet our standard, it doesn't make the shelf.</p>
+    {{-- ── STATS BAR ── --}}
+    <div class="ab-stats-bar ab-fade">
+        <div class="container">
+            <div class="ab-stats-inner">
+                <div class="ab-stat">
+                    <span class="ab-stat-number">2024</span>
+                    <span class="ab-stat-label">Founded</span>
+                </div>
+                <div class="ab-stat">
+                    <span class="ab-stat-number">100%</span>
+                    <span class="ab-stat-label">Curated</span>
+                </div>
+                <div class="ab-stat">
+                    <span class="ab-stat-number">Every</span>
+                    <span class="ab-stat-label">Occasion</span>
+                </div>
+                <div class="ab-stat">
+                    <span class="ab-stat-number">Nepal</span>
+                    <span class="ab-stat-label">Based</span>
+                </div>
             </div>
         </div>
     </div>
 
-    {{-- ── CLOSING BANNER ── --}}
-    <div class="ab-banner ab-fade">
-        <p class="ab-banner-quote">
-            "We started Gifts Hub so no one ever has to settle for a gift that doesn't <em>mean something</em>."
-        </p>
-        <div class="ab-banner-sig">
-            <strong class="ab-banner-name">Sandesh Bhandari</strong>
-            <span class="ab-banner-role">Founder &amp; CEO</span>
+    {{-- ── MAIN CONTENT ── --}}
+    <div class="ab-main">
+        <div class="container">
+
+            {{-- Mission ── --}}
+            <div class="ab-section ab-fade">
+                <div class="ab-section-row">
+                    <p class="ab-section-label">Our Mission</p>
+                    <div>
+                        <h2 class="ab-section-heading">
+                            To make every moment of giving feel as special as the moment of receiving.
+                        </h2>
+                        <p class="ab-section-para">
+                            We believe gifting is one of the most human things we do. Behind every wrapped box is a relationship, a memory, a feeling. Our role is to help you find the gift that carries all of that — effortlessly, beautifully, and with care.
+                        </p>
+                        <p class="ab-section-para">
+                            From birthdays and anniversaries to festivals and milestones, Gifts Hub is built to make you feel confident in every gift you give.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ab-divider"></div>
+
+            {{-- Values ── --}}
+            <div class="ab-section ab-fade">
+                <div class="ab-section-row">
+                    <p class="ab-section-label">What we stand for</p>
+                    <div>
+                        <div class="ab-values-grid">
+                            <div class="ab-val">
+                                <span class="ab-val-num">01</span>
+                                <p class="ab-val-title">Thoughtful Curation</p>
+                                <p class="ab-val-desc">Every product in our store is handpicked for quality, meaning, and that "wow" factor.</p>
+                            </div>
+                            <div class="ab-val">
+                                <span class="ab-val-num">02</span>
+                                <p class="ab-val-title">Personal Touch</p>
+                                <p class="ab-val-desc">We design the gifting experience to feel personal — never generic, never rushed.</p>
+                            </div>
+                            <div class="ab-val">
+                                <span class="ab-val-num">03</span>
+                                <p class="ab-val-title">Trusted Quality</p>
+                                <p class="ab-val-desc">We stand behind every item. If it doesn't meet our standard, it doesn't make the shelf.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ab-divider"></div>
+
+            {{-- Founder Quote ── --}}
+            <div class="ab-quote-banner ab-fade">
+                <div class="ab-quote-mark">&ldquo;</div>
+                <div class="ab-quote-content">
+                    <p class="ab-quote-text">
+                        We started Gifts Hub so no one ever has to settle for a gift that doesn't <em>mean something</em>.
+                    </p>
+                    <div class="ab-quote-author">
+                        <div class="ab-quote-avatar">SB</div>
+                        <div>
+                            <strong class="ab-quote-name">Sandesh Bhandari</strong>
+                            <span class="ab-quote-role">Founder &amp; CEO</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-</div>
 </div>
 
 @endsection
