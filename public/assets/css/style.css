@@ -36,11 +36,11 @@ body {
 
 /* Modern Navbar */
 .theme-navbar {
-  background: rgba(255, 255, 255, 0.95) !important;
+  background: linear-gradient(135deg, #1c2a3a 0%, #2a3b4c 100%) !important;
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   padding: 12px 0;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   transition: var(--transition);
   position: relative;
   z-index: 1000;
@@ -48,11 +48,11 @@ body {
 
 .theme-navbar.scrolled {
   padding: 8px 0;
-  background: rgba(255, 255, 255, 0.98) !important;
+  background: linear-gradient(135deg, #1c2a3a 0%, #2a3b4c 100%) !important;
 }
 
 .theme-navbar .nav-link {
-  color: var(--text-dark) !important;
+  color: var(--bg-white) !important;
   font-weight: 500;
   font-size: 0.95rem;
   padding: 8px 12px !important;
@@ -63,8 +63,8 @@ body {
 }
 
 .theme-navbar .nav-link:hover {
-  color: var(--primary-color) !important;
-  background-color: var(--primary-light);
+  color: var(--bg-white) !important;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .theme-navbar .nav-link::after {
@@ -184,8 +184,8 @@ body {
 
 /* Modern Custom Button */
 .btn-custom-black {
-  background: transparent !important;
-  border: 2px solid var(--text-dark) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 2px solid var(--bg-white) !important;
   color: var(--text-dark) !important;
   font-weight: 600;
   padding: 8px 20px !important;
@@ -193,13 +193,15 @@ body {
   transition: var(--transition);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .btn-custom-black:hover {
-  background: var(--text-dark) !important;
-  color: var(--bg-white) !important;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  background: var(--bg-white) !important;
+  color: var(--text-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--bg-white) !important;
 }
 
 /* Modern Hero Section */
@@ -338,22 +340,12 @@ body {
 
 /* Modern Footer */
 .footer-custom {
-  background: linear-gradient(135deg, var(--text-dark) 0%, #374151 100%);
+  background: linear-gradient(135deg, #1c2a3a 0%, #2a3b4c 100%);
   color: var(--bg-light);
-  padding: 80px 0 0;
+  padding: 25px 0 0;
   font-size: 0.95rem;
   position: relative;
   overflow: hidden;
-}
-
-.footer-custom::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
 }
 
 .footer-custom h5 {
@@ -424,8 +416,8 @@ body {
 
 .footer-bottom {
   background: rgba(0, 0, 0, 0.2);
-  padding: 25px 0;
-  margin-top: 60px;
+  padding: 15px 0;
+  margin-top: 25px;
   text-align: center;
   color: var(--bg-light);
   font-size: 0.9rem;
@@ -456,10 +448,11 @@ body {
   display: flex;
   align-items: center;
   background: var(--bg-light);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius);
   border: 2px solid var(--border-color);
   transition: var(--transition);
   overflow: hidden;
+  max-width: 300px;
 }
 
 .search-modern:focus-within {
@@ -471,8 +464,8 @@ body {
   flex: 1;
   border: none !important;
   background: transparent;
-  padding: 12px 16px;
-  font-size: 0.95rem;
+  padding: 8px 12px;
+  font-size: 0.9rem;
   outline: none;
 }
 
@@ -484,8 +477,8 @@ body {
   background: var(--primary-color) !important;
   color: var(--bg-white) !important;
   border: none !important;
-  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
-  padding: 12px 16px;
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  padding: 8px 12px;
   transition: var(--transition);
 }
 
