@@ -7,9 +7,6 @@ use App\Http\Controllers\ProductdetailController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\Productdetail1Controller;
-use App\Http\Controllers\Productdetail2Controller;
-use App\Http\Controllers\Productdetail3Controller;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\admin\AdminCategoryController;
 use App\Http\Controllers\admin\AdminUserController;
@@ -18,6 +15,13 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\KhaltiController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\WishlistController;
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -48,13 +52,12 @@ Route::post('/register', [UserController::class, 'registerPost'])->name('registe
 Route::post('/login', [UserController::class, 'loginPost'])->name('login.post');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-// New Routes
-Route::get('/about', [App\Http\Controllers\AboutController::class, 'index'])->name('about');
-Route::get('/contact', [App\Http\Controllers\ContactController::class, 'index'])->name('contact');
-Route::resource('wishlist', App\Http\Controllers\WishlistController::class);
+// Static pages routes
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+Route::get('categories', [CategoryController::class, 'index'])->name('categories');
+Route::get('contact/index', [ContactController::class, 'index'])->name('contact.index');
 
-
-// user dashboard routes
+// User dashboard routes
 Route::get('user/', [UserController::class, 'index'])->name('user.dashboard');
 Route::get('user/order-history/', [UserController::class, 'history'])->name('user.order.history');
 Route::get('user/order-detail/{orderId}', [UserController::class, 'detail'])->name('user.order.detail');
@@ -63,6 +66,13 @@ Route::get('user/settings/', [UserController::class, 'settings'])->name('user.se
 Route::post('user/update-profile/', [UserController::class, 'updateProfile'])->name('user.update.profile');
 Route::post('user/update-password/', [UserController::class, 'updatePassword'])->name('user.update.password');
 Route::get('user/wishlist/', [UserController::class, 'wishlist'])->name('user.wishlist');
+Route::resource('wishlist', WishlistController::class);
+Route::match(['get', 'post'], 'user/logout', [UserController::class, 'logout'])->name('user.logout');
+
+// Test route for debugging
+Route::get('test-logout', function() {
+    return 'Logout route is working: ' . route('user.logout');
+});
 
 // Admin dashboard routes
 Route::get('admin/login/', [AdminController::class, 'login'])->name('admin.login');
@@ -79,6 +89,7 @@ Route::get('admin/view-product',[AdminProductController::class,'viewproduct'])->
 Route::get('admin/edit-product/{p_id}',[AdminProductController::class, 'editproduct'])->name('admin.edit-product')->middleware('admin');
 Route::put('admin/edit-product/{p_id}',[AdminProductController::class, 'updateproduct'])->name('admin.product.update')->middleware('admin');
 Route::delete('admin/delete-product/{p_id}',[AdminProductController::class, 'deleteproduct'])->name('admin.delete-product')->middleware('admin');
+Route::post('admin/products/bulk-update', [AdminProductController::class, 'bulkProductStatusUpdate'])->name('admin.products.bulk.update')->middleware('admin');
 
 Route::get('admin/add-category', [AdminCategoryController::class, 'addcategory'])->name('admin.add-category')->middleware('admin');
 Route::post('admin/add-category', [AdminCategoryController::class, 'createcategory'])->name('admin.category.store')->middleware('admin');
@@ -96,6 +107,13 @@ Route::get('admin/user/view/{id}', [AdminUserController::class, 'show'])->name('
 Route::post('admin/user/block/{id}', [AdminUserController::class, 'block'])->name('admin.users.block')->middleware('admin');
 Route::post('admin/user/unblock/{id}', [AdminUserController::class, 'unblock'])->name('admin.users.unblock')->middleware('admin');
 Route::post('admin/user/bulk-action', [AdminUserController::class, 'bulkAction'])->name('admin.users.bulk')->middleware('admin');
+
+// Order Management Routes
+Route::get('admin/orders', [AdminController::class, 'ordersIndex'])->name('admin.orders.index')->middleware('admin');
+Route::get('admin/orders/{id}', [AdminController::class, 'orderShow'])->name('admin.orders.show')->middleware('admin');
+Route::post('admin/orders/{id}', [AdminController::class, 'orderUpdate'])->name('admin.orders.update')->middleware('admin');
+Route::delete('admin/orders/{id}', [AdminController::class, 'orderDestroy'])->name('admin.orders.destroy')->middleware('admin');
+Route::post('admin/orders/bulk-update', [AdminController::class, 'bulkOrderStatusUpdate'])->name('admin.orders.bulk.update')->middleware('admin');
 
 Route::get('admin/details', [AdminController::class, 'details'])->name('admin.details')->middleware('admin');
 
@@ -118,22 +136,11 @@ Route::post('/purchase-report/filter', [AdminController::class, 'purchaseReportF
 // Review routes
 Route::post('/review/submit', [ReviewController::class, 'submit'])->name('review.submit');
 
-// Khalti Payment Routes
-Route::get('/khalti/test', function() {return view('khalti.test'); })->name('khalti.test');
-Route::get('/khalti/test-simple', function() {return view('khalti.test-simple'); })->name('khalti.test-simple');
-Route::get('/khalti/payment', [KhaltiController::class, 'showPaymentForm'])->name('khalti.payment-form');
-Route::post('/khalti/initiate', [KhaltiController::class, 'initiatePayment'])->name('khalti.initiate');
-Route::get('/khalti/verify', [KhaltiController::class, 'verifyPayment'])->name('khalti.verify');
-Route::get('/khalti/success', [KhaltiController::class, 'paymentSuccess'])->name('khalti.success');
-Route::get('/khalti/failure', [KhaltiController::class, 'paymentFailure'])->name('khalti.failure');
-Route::get('/khalti/status/{transactionId}', [KhaltiController::class, 'checkPaymentStatus'])->name('khalti.status');
-
 // Search routes
 Route::get('/search/autocomplete', [SearchController::class, 'autocomplete'])->name('search.autocomplete');
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
-// Custom Khalti Integration Routes
-use App\Http\Controllers\PaymentController;
+
 
 Route::get('/khalti-test', function () {
     return view('khalti');
