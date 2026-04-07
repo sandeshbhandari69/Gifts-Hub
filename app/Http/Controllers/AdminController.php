@@ -288,12 +288,99 @@ class AdminController extends Controller
 
     public function details()
     {
-        return view('admin/details');
+        // This method is deprecated, redirect to orders index
+        return redirect()->route('admin.orders.index');
     }
 
      public function user()
     {
         return view('admin/user');
+    }
+    
+    // Order Management Methods
+    public function ordersIndex(Request $request)
+    {
+        $query = Order::with('user');
+        
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('order_id', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($subQuery) use ($search) {
+                      $subQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+        
+        // Filter by status
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+        
+        // Filter by date range
+        if ($request->has('from_date') && !empty($request->from_date)) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->has('to_date') && !empty($request->to_date)) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+        
+        $orders = $query->orderBy('created_at', 'desc')
+                            ->paginate(15)
+                            ->withQueryString();
+        
+        $totalOrders = $query->count();
+        $totalSales = $query->sum('total');
+        
+        return view('admin.orders.index', compact('orders', 'totalOrders', 'totalSales'));
+    }
+    
+    public function orderShow($id)
+    {
+        $order = Order::with('user')->findOrFail($id);
+        return view('admin.orders.show', compact('order'));
+    }
+    
+    public function orderUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:processing,shipped,delivered,cancelled,on_the_way',
+        ]);
+        
+        $order = Order::findOrFail($id);
+        $oldStatus = $order->status;
+        $order->update(['status' => $request->status]);
+        
+        // Log the status change
+        \Log::info("Order #{$order->order_id} status changed from {$oldStatus} to {$request->status} by admin " . auth()->user()->name);
+        
+        return redirect()->route('admin.orders.index')
+                    ->with('success', "Order #{$order->order_id} status updated to " . ucfirst(str_replace('_', ' ', $request->status)) . " successfully!");
+    }
+    
+    public function orderDestroy($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->delete();
+        
+        return redirect()->route('admin.orders.index')
+                    ->with('success', 'Order deleted successfully!');
+    }
+    
+    public function bulkOrderStatusUpdate(Request $request)
+    {
+        $request->validate([
+            'order_ids' => 'required|array',
+            'order_ids.*' => 'exists:orders,id',
+            'status' => 'required|in:processing,shipped,delivered,cancelled,on_the_way',
+        ]);
+        
+        $updatedCount = Order::whereIn('id', $request->order_ids)
+                            ->update(['status' => $request->status]);
+        
+        return redirect()->route('admin.orders.index')
+                    ->with('success', "Successfully updated status for {$updatedCount} orders to " . ucfirst(str_replace('_', ' ', $request->status)) . "!");
     }   
      
 }

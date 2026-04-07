@@ -24,15 +24,13 @@ class CheckoutController extends Controller
     
     public function process(Request $request)
     {
-        // Validate the form
+        // Validate form
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
             'country' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
             'pin_code' => 'nullable|string|max:10',
             'address' => 'required|string',
             'payment_method' => 'required|in:credit_card,esewa,khalti,cod'
@@ -82,9 +80,8 @@ class CheckoutController extends Controller
                     'email' => $request->email,
                     'phone' => $request->phone,
                     'country' => $request->country,
-                    'city' => $request->city,
-                    'state' => $request->state,
                     'pin_code' => $request->pin_code,
+                    'landmark' => request('landmark'),
                     'address' => $request->address,
                 ],
                 'items' => $cartItems,
@@ -115,7 +112,6 @@ class CheckoutController extends Controller
                 'phone' => $request->phone,
                 'country' => $request->country,
                 'city' => $request->city,
-                'state' => $request->state,
                 'pin_code' => $request->pin_code,
                 'landmark' => request('landmark'),
                 'address' => $request->address,

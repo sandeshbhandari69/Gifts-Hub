@@ -42,6 +42,6 @@ class ProductdetailController extends Controller
         $reviewController = new \App\Http\Controllers\ReviewController();
         $reviews = $reviewController->getProductReviews($product->p_id);
 
-        return view('product-detail1', compact('product', 'relatedProducts', 'reviews'));
+        return view('product-detail', compact('product', 'relatedProducts', 'reviews'));
     }
 }

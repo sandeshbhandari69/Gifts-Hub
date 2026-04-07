@@ -72,7 +72,7 @@ class CartController extends Controller
         
         $request->validate([
             'id' => 'required',
-            'action' => 'required|in:increase,decrease'
+            'action' => 'required|in:increase,decrease,set'
         ]);
 
         $cart = Session::get('cart', []);
@@ -95,6 +95,12 @@ class CartController extends Controller
                 } elseif ($action === 'decrease' && $cart[$key]['quantity'] > 1) {
                     $cart[$key]['quantity']--;
                     Log::info('Decreased quantity to: ' . $cart[$key]['quantity']);
+                } elseif ($action === 'set') {
+                    $newQuantity = (int) $request->quantity;
+                    if ($newQuantity >= 1 && $newQuantity <= 99) {
+                        $cart[$key]['quantity'] = $newQuantity;
+                        Log::info('Set quantity to: ' . $cart[$key]['quantity']);
+                    }
                 }
                 $updatedQuantity = $cart[$key]['quantity'];
                 break;
