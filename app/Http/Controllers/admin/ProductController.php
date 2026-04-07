@@ -26,6 +26,7 @@ class ProductController extends Controller
             'p_stock' => 'required',
             'p_description' => 'required',
             'p_image' => 'required|image',
+            'status' => 'required|in:active,inactive,out_of_stock,discontinued',
         ]);
 
         $imagePath = $request->file('p_image')->store('products', 'public');
@@ -37,6 +38,7 @@ class ProductController extends Controller
             'p_stock' => $request->p_stock,
             'p_description' => $request->p_description,
             'p_image' => $imagePath,
+            'status' => $request->status,
         ]);
 
         // Automatically create inventory entry for new product
@@ -77,6 +79,7 @@ class ProductController extends Controller
             'p_stock' => 'required|integer|min:0',
             'p_description' => 'required|string',
             'p_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'status' => 'required|in:active,inactive,out_of_stock,discontinued',
         ]);
 
         $data = [
@@ -85,6 +88,7 @@ class ProductController extends Controller
             'c_id' => $request->c_id,
             'p_stock' => $request->p_stock,
             'p_description' => $request->p_description,
+            'status' => $request->status,
         ];
 
         if ($request->hasFile('p_image')) {
@@ -103,5 +107,20 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('admin.view-product')->with('success', 'Product deleted successfully!');
+    }
+
+    public function bulkProductStatusUpdate(Request $request)
+    {
+        $request->validate([
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'exists:products,p_id',
+            'status' => 'required|in:active,inactive,out_of_stock,discontinued',
+        ]);
+        
+        $updatedCount = Product::whereIn('p_id', $request->product_ids)
+                            ->update(['status' => $request->status]);
+        
+        return redirect()->route('admin.view-product')
+                    ->with('success', "Successfully updated status for {$updatedCount} products to " . ucfirst(str_replace('_', ' ', $request->status)) . "!");
     }
 }

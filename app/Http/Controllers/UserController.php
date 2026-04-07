@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -127,6 +128,60 @@ class UserController extends Controller
     {
         // Sample order data for demonstration
         $sampleOrders = [
+            'ORD-69CAB17C2CE2C' => [
+                'order_id' => 'ORD-69CAB17C2CE2C',
+                'created_at' => now()->subMonth(),
+                'total' => 299.99,
+                'payment_method' => 'khalti',
+                'status' => 'processing',
+                'status_badge' => '<span class="badge rounded-pill bg-secondary">Processing</span>',
+                'billing' => [
+                    'first_name' => 'Sandesh',
+                    'last_name' => 'Shrestha',
+                    'email' => 'sandesh@example.com',
+                    'phone' => '(123) 456-7890',
+                    'address' => '123 Main Street',
+                    'city' => 'Kathmandu',
+                    'state' => 'Bagmati',
+                    'pin_code' => '44600',
+                    'country' => 'Nepal'
+                ],
+                'items' => [
+                    [
+                        'name' => 'Message Card',
+                        'price' => '299.99',
+                        'quantity' => 1,
+                        'image' => 'assets/images/Product/1.png'
+                    ]
+                ]
+            ],
+            'ORD-69C9E8C0581EC' => [
+                'order_id' => 'ORD-69C9E8C0581EC',
+                'created_at' => now()->subMonth(),
+                'total' => 1999.98,
+                'payment_method' => 'khalti',
+                'status' => 'processing',
+                'status_badge' => '<span class="badge rounded-pill bg-secondary">Processing</span>',
+                'billing' => [
+                    'first_name' => 'Sandesh',
+                    'last_name' => 'Shrestha',
+                    'email' => 'sandesh@example.com',
+                    'phone' => '(123) 456-7890',
+                    'address' => '123 Main Street',
+                    'city' => 'Kathmandu',
+                    'state' => 'Bagmati',
+                    'pin_code' => '44600',
+                    'country' => 'Nepal'
+                ],
+                'items' => [
+                    [
+                        'name' => 'Premium Gift Box',
+                        'price' => '1999.98',
+                        'quantity' => 1,
+                        'image' => 'assets/images/Product/G1.png'
+                    ]
+                ]
+            ],
             '1001' => [
                 'order_id' => '1001',
                 'created_at' => now()->subMonths(2),
@@ -145,7 +200,14 @@ class UserController extends Controller
                     'pin_code' => '44600',
                     'country' => 'Nepal'
                 ],
-                'items' => [] // Empty items, will show sample products
+                'items' => [
+                    [
+                        'name' => 'Mar Watch',
+                        'price' => '100',
+                        'quantity' => 1,
+                        'image' => 'assets/images/SubCategory/Gadgets/watch.png'
+                    ]
+                ]
             ],
             '2002' => [
                 'order_id' => '2002',
@@ -165,7 +227,20 @@ class UserController extends Controller
                     'pin_code' => '44600',
                     'country' => 'Nepal'
                 ],
-                'items' => [] // Empty items, will show sample products
+                'items' => [
+                    [
+                        'name' => 'Cake',
+                        'price' => '50',
+                        'quantity' => 1,
+                        'image' => 'assets/images/Product/2.png'
+                    ],
+                    [
+                        'name' => 'Gift Box',
+                        'price' => '150',
+                        'quantity' => 1,
+                        'image' => 'assets/images/Product/3.png'
+                    ]
+                ]
             ],
             '2003' => [
                 'order_id' => '2003',
@@ -185,7 +260,20 @@ class UserController extends Controller
                     'pin_code' => '44600',
                     'country' => 'Nepal'
                 ],
-                'items' => [] // Empty items, will show sample products
+                'items' => [
+                    [
+                        'name' => 'Flower Bouquet',
+                        'price' => '80',
+                        'quantity' => 2,
+                        'image' => 'assets/images/Product/4.png'
+                    ],
+                    [
+                        'name' => 'Chocolate Box',
+                        'price' => '40',
+                        'quantity' => 1,
+                        'image' => 'assets/images/Product/5.png'
+                    ]
+                ]
             ],
             '2004' => [
                 'order_id' => '2004',
@@ -205,7 +293,20 @@ class UserController extends Controller
                     'pin_code' => '44600',
                     'country' => 'Nepal'
                 ],
-                'items' => [] // Empty items, will show sample products
+                'items' => [
+                    [
+                        'name' => 'Personalized Mug',
+                        'price' => '60',
+                        'quantity' => 1,
+                        'image' => 'assets/images/Product/7.png'
+                    ],
+                    [
+                        'name' => 'Greeting Card',
+                        'price' => '20',
+                        'quantity' => 3,
+                        'image' => 'assets/images/Product/8.png'
+                    ]
+                ]
             ],
             '2005' => [
                 'order_id' => '2005',
@@ -225,7 +326,20 @@ class UserController extends Controller
                     'pin_code' => '44600',
                     'country' => 'Nepal'
                 ],
-                'items' => [] // Empty items, will show sample products
+                'items' => [
+                    [
+                        'name' => 'Teddy Bear',
+                        'price' => '120',
+                        'quantity' => 1,
+                        'image' => 'assets/images/Product/9.png'
+                    ],
+                    [
+                        'name' => 'Perfume Set',
+                        'price' => '80',
+                        'quantity' => 1,
+                        'image' => 'assets/images/Product/10.png'
+                    ]
+                ]
             ]
         ];
         
@@ -248,7 +362,14 @@ class UserController extends Controller
                 'pin_code' => '44600',
                 'country' => 'Nepal'
             ],
-            'items' => []
+            'items' => [
+                [
+                    'name' => 'Gift Package',
+                    'price' => '75',
+                    'quantity' => 2,
+                    'image' => 'assets/images/Product/B2.png'
+                ]
+            ]
         ]);
     }
 
@@ -356,6 +477,10 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
+        // Debug: Log what method is being used
+        \Log::info('Logout method: ' . $request->method());
+        \Log::info('Logout route requested: ' . request()->route()->getName());
+        
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
