@@ -467,12 +467,37 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->route('user.dashboard')->with('success', 'Logged in successfully');
+        // First validate credentials without logging in
+        $user = User::where('email', $request->email)->first();
+        
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->with('error', 'The provided credentials do not match our records.');
         }
 
-        return back()->with('error', 'The provided credentials do not match our records.');
+        // Store user ID in session for OTP verification
+        session(['pending_login_user_id' => $user->id]);
+        session(['pending_login_email' => $user->email]);
+
+        // Generate and send OTP
+        try {
+            $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $expiresAt = \Carbon\Carbon::now()->addMinutes(5);
+            
+            $user->otp = $otp;
+            $user->otp_expires_at = $expiresAt;
+            $user->save();
+            
+            // Send OTP via email
+            \Mail::to($user->email)->send(new \App\Mail\SendOtpMail($otp));
+            
+            return redirect()->route('otp.verify.form')
+                ->with('success', 'Login credentials verified! Please enter the OTP sent to your email.')
+                ->with('email', $user->email);
+                
+        } catch (\Exception $e) {
+            \Log::error('OTP sending failed during login: ' . $e->getMessage());
+            return back()->with('error', 'Failed to send OTP. Please try again.');
+        }
     }
 
     public function logout(Request $request)

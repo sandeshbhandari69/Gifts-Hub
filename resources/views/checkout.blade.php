@@ -94,7 +94,7 @@
                                 <th>
                                     <div class="d-flex">
                                         <div>    
-                                            <img src="{{ asset('assets/images/Product/' . $item['image']) }}" class="img-fluid rounded" style="width: 70px;" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('assets/images/Product/1.png') }}';">
+                                            <img src="{{ $item['image'] }}" class="img-fluid rounded" style="width: 70px;" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('assets/images/product/1.png') }}';">
                                         </div>
                                         <div class="p-3"><h6>{{ $item['name'] }}</h6></div>
                                     </div>

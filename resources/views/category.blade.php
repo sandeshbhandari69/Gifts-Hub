@@ -74,7 +74,7 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
     margin: 0 0 10px;
 }
 .page-subtitle {
-    color: rgba(255,255,255,0.6);
+    color: #fff;
     font-size: 0.92rem;
     margin: 0;
 }
@@ -111,7 +111,7 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
     width: 100%;
     height: 40px;
     border-radius: 50px;
-    border: 1.5px solid rgba(26,32,53,0.14);
+    border: 1.5px solid rgba(0, 0, 0, 0.14);
     background: var(--gh-bg);
     padding: 0 16px 0 40px;
     font-family: var(--gh-font-b);
