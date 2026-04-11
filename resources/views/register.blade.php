@@ -100,22 +100,24 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="confirm_password" class="form-label fw-semibold">
+                                    <label for="password_confirmation" class="form-label fw-semibold">
                                         <i class="fa-solid fa-lock me-2 text-primary"></i>Confirm Password
                                     </label>
                                     <div class="password-toggle">
                                         <input type="password" 
                                                class="form-control form-control-modern" 
-                                               id="confirm_password" 
+                                               id="password_confirmation" 
                                                name="password_confirmation" 
                                                placeholder="Confirm your password" 
-                                               required>
-                                        <button type="button" class="password-toggle-btn" onclick="togglePassword('confirm_password')">
+                                               required 
+                                               autocomplete="new-password">
+                                        <button type="button" class="password-toggle-btn" onclick="togglePassword('password_confirmation')">
                                             <i class="fa-solid fa-eye"></i>
                                         </button>
                                     </div>
                                 </div>
 
+                                
                                 <div class="mb-4">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="terms" required>

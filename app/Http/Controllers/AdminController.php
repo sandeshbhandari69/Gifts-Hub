@@ -381,6 +381,12 @@ class AdminController extends Controller
         
         return redirect()->route('admin.orders.index')
                     ->with('success', "Successfully updated status for {$updatedCount} orders to " . ucfirst(str_replace('_', ' ', $request->status)) . "!");
-    }   
+    }
+    
+    // Messages Management Methods
+    public function messagesIndex()
+    {
+        return view('admin.messages.index');
+    }
      
 }

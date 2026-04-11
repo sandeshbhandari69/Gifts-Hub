@@ -31,7 +31,7 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
 
 /* ── Page header ── */
 .page-header {
-    background: linear-gradient(135deg, var(--brand-dark) 0%, #ffffff 100%);
+    background: linear-gradient(135deg, #0891b2 0%, #14b8a6 50%, #10b981 100%);
     padding: 44px 0 40px;
     margin-bottom: 48px;
 }

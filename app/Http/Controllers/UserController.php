@@ -111,268 +111,19 @@ class UserController extends Controller
         
         $user = Auth::user();
         
-        // Try to find real order first
+        // Only find orders that belong to the current user
         $order = Order::where('user_id', $user->id)
                      ->where('order_id', $orderId)
                      ->first();
         
-        // If no real order found, create sample order data
+        // If no order found for this user, show 404
         if (!$order) {
-            $order = $this->getSampleOrderData($orderId);
+            abort(404, 'Order not found.');
         }
         
         return view('user.detail', compact('user', 'order'));
     }
     
-    private function getSampleOrderData($orderId)
-    {
-        // Sample order data for demonstration
-        $sampleOrders = [
-            'ORD-69CAB17C2CE2C' => [
-                'order_id' => 'ORD-69CAB17C2CE2C',
-                'created_at' => now()->subMonth(),
-                'total' => 299.99,
-                'payment_method' => 'khalti',
-                'status' => 'processing',
-                'status_badge' => '<span class="badge rounded-pill bg-secondary">Processing</span>',
-                'billing' => [
-                    'first_name' => 'Sandesh',
-                    'last_name' => 'Shrestha',
-                    'email' => 'sandesh@example.com',
-                    'phone' => '(123) 456-7890',
-                    'address' => '123 Main Street',
-                    'city' => 'Kathmandu',
-                    'state' => 'Bagmati',
-                    'pin_code' => '44600',
-                    'country' => 'Nepal'
-                ],
-                'items' => [
-                    [
-                        'name' => 'Message Card',
-                        'price' => '299.99',
-                        'quantity' => 1,
-                        'image' => 'assets/images/Product/1.png'
-                    ]
-                ]
-            ],
-            'ORD-69C9E8C0581EC' => [
-                'order_id' => 'ORD-69C9E8C0581EC',
-                'created_at' => now()->subMonth(),
-                'total' => 1999.98,
-                'payment_method' => 'khalti',
-                'status' => 'processing',
-                'status_badge' => '<span class="badge rounded-pill bg-secondary">Processing</span>',
-                'billing' => [
-                    'first_name' => 'Sandesh',
-                    'last_name' => 'Shrestha',
-                    'email' => 'sandesh@example.com',
-                    'phone' => '(123) 456-7890',
-                    'address' => '123 Main Street',
-                    'city' => 'Kathmandu',
-                    'state' => 'Bagmati',
-                    'pin_code' => '44600',
-                    'country' => 'Nepal'
-                ],
-                'items' => [
-                    [
-                        'name' => 'Premium Gift Box',
-                        'price' => '1999.98',
-                        'quantity' => 1,
-                        'image' => 'assets/images/Product/G1.png'
-                    ]
-                ]
-            ],
-            '1001' => [
-                'order_id' => '1001',
-                'created_at' => now()->subMonths(2),
-                'total' => 150.00,
-                'payment_method' => 'cod',
-                'status' => 'shipped',
-                'status_badge' => '<span class="badge rounded-pill bg-success">Shipped</span>',
-                'billing' => [
-                    'first_name' => 'Sandesh',
-                    'last_name' => 'Shrestha',
-                    'email' => 'sandesh@example.com',
-                    'phone' => '(123) 456-7890',
-                    'address' => '123 Main Street',
-                    'city' => 'Kathmandu',
-                    'state' => 'Bagmati',
-                    'pin_code' => '44600',
-                    'country' => 'Nepal'
-                ],
-                'items' => [
-                    [
-                        'name' => 'Mar Watch',
-                        'price' => '100',
-                        'quantity' => 1,
-                        'image' => 'assets/images/SubCategory/Gadgets/watch.png'
-                    ]
-                ]
-            ],
-            '2002' => [
-                'order_id' => '2002',
-                'created_at' => now()->subMonth(),
-                'total' => 200.00,
-                'payment_method' => 'credit_card',
-                'status' => 'processing',
-                'status_badge' => '<span class="badge rounded-pill bg-secondary">Processing</span>',
-                'billing' => [
-                    'first_name' => 'Sandesh',
-                    'last_name' => 'Shrestha',
-                    'email' => 'sandesh@example.com',
-                    'phone' => '(123) 456-7890',
-                    'address' => '123 Main Street',
-                    'city' => 'Kathmandu',
-                    'state' => 'Bagmati',
-                    'pin_code' => '44600',
-                    'country' => 'Nepal'
-                ],
-                'items' => [
-                    [
-                        'name' => 'Cake',
-                        'price' => '50',
-                        'quantity' => 1,
-                        'image' => 'assets/images/Product/2.png'
-                    ],
-                    [
-                        'name' => 'Gift Box',
-                        'price' => '150',
-                        'quantity' => 1,
-                        'image' => 'assets/images/Product/3.png'
-                    ]
-                ]
-            ],
-            '2003' => [
-                'order_id' => '2003',
-                'created_at' => now()->subMonth(),
-                'total' => 200.00,
-                'payment_method' => 'cod',
-                'status' => 'processing',
-                'status_badge' => '<span class="badge rounded-pill bg-secondary">Processing</span>',
-                'billing' => [
-                    'first_name' => 'Sandesh',
-                    'last_name' => 'Shrestha',
-                    'email' => 'sandesh@example.com',
-                    'phone' => '(123) 456-7890',
-                    'address' => '123 Main Street',
-                    'city' => 'Kathmandu',
-                    'state' => 'Bagmati',
-                    'pin_code' => '44600',
-                    'country' => 'Nepal'
-                ],
-                'items' => [
-                    [
-                        'name' => 'Flower Bouquet',
-                        'price' => '80',
-                        'quantity' => 2,
-                        'image' => 'assets/images/Product/4.png'
-                    ],
-                    [
-                        'name' => 'Chocolate Box',
-                        'price' => '40',
-                        'quantity' => 1,
-                        'image' => 'assets/images/Product/5.png'
-                    ]
-                ]
-            ],
-            '2004' => [
-                'order_id' => '2004',
-                'created_at' => now()->subMonth(),
-                'total' => 200.00,
-                'payment_method' => 'esewa',
-                'status' => 'on_the_way',
-                'status_badge' => '<span class="badge rounded-pill bg-info">On the way</span>',
-                'billing' => [
-                    'first_name' => 'Sandesh',
-                    'last_name' => 'Shrestha',
-                    'email' => 'sandesh@example.com',
-                    'phone' => '(123) 456-7890',
-                    'address' => '123 Main Street',
-                    'city' => 'Kathmandu',
-                    'state' => 'Bagmati',
-                    'pin_code' => '44600',
-                    'country' => 'Nepal'
-                ],
-                'items' => [
-                    [
-                        'name' => 'Personalized Mug',
-                        'price' => '60',
-                        'quantity' => 1,
-                        'image' => 'assets/images/Product/7.png'
-                    ],
-                    [
-                        'name' => 'Greeting Card',
-                        'price' => '20',
-                        'quantity' => 3,
-                        'image' => 'assets/images/Product/8.png'
-                    ]
-                ]
-            ],
-            '2005' => [
-                'order_id' => '2005',
-                'created_at' => now()->subMonth(),
-                'total' => 200.00,
-                'payment_method' => 'cod',
-                'status' => 'cancelled',
-                'status_badge' => '<span class="badge rounded-pill bg-warning">Cancelled</span>',
-                'billing' => [
-                    'first_name' => 'Sandesh',
-                    'last_name' => 'Shrestha',
-                    'email' => 'sandesh@example.com',
-                    'phone' => '(123) 456-7890',
-                    'address' => '123 Main Street',
-                    'city' => 'Kathmandu',
-                    'state' => 'Bagmati',
-                    'pin_code' => '44600',
-                    'country' => 'Nepal'
-                ],
-                'items' => [
-                    [
-                        'name' => 'Teddy Bear',
-                        'price' => '120',
-                        'quantity' => 1,
-                        'image' => 'assets/images/Product/9.png'
-                    ],
-                    [
-                        'name' => 'Perfume Set',
-                        'price' => '80',
-                        'quantity' => 1,
-                        'image' => 'assets/images/Product/10.png'
-                    ]
-                ]
-            ]
-        ];
-        
-        // Return sample order data or create default if not found
-        return (object) ($sampleOrders[$orderId] ?? [
-            'order_id' => $orderId,
-            'created_at' => now()->subMonth(),
-            'total' => 150.00,
-            'payment_method' => 'cod',
-            'status' => 'shipped',
-            'status_badge' => '<span class="badge rounded-pill bg-success">Shipped</span>',
-            'billing' => [
-                'first_name' => 'Sandesh',
-                'last_name' => 'Shrestha',
-                'email' => 'sandesh@example.com',
-                'phone' => '(123) 456-7890',
-                'address' => '123 Main Street',
-                'city' => 'Kathmandu',
-                'state' => 'Bagmati',
-                'pin_code' => '44600',
-                'country' => 'Nepal'
-            ],
-            'items' => [
-                [
-                    'name' => 'Gift Package',
-                    'price' => '75',
-                    'quantity' => 2,
-                    'image' => 'assets/images/Product/B2.png'
-                ]
-            ]
-        ]);
-    }
-
     public function settings()
     {
         if (!Auth::check()) {
@@ -445,19 +196,48 @@ class UserController extends Controller
     public function registerPost(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|min:6|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'user', // Default role for email registration
+        // Store registration data in session
+        session([
+            'pending_registration' => [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'user'
+            ]
         ]);
 
-        return redirect()->route('login')->with('success', 'Registration successful! Please login to continue.');
+        // Generate and send OTP
+        try {
+            $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $expiresAt = \Carbon\Carbon::now()->addMinutes(5);
+            
+            // Store OTP in session (not in database yet since user doesn't exist)
+            session([
+                'registration_otp' => $otp,
+                'registration_otp_expires_at' => $expiresAt,
+                'registration_email' => $request->email
+            ]);
+            
+            // Send OTP via email (using queue for better performance)
+            \Mail::to($request->email)->queue(new \App\Mail\SendOtpMail($otp));
+            
+            return redirect()->route('register.otp.verify')
+                ->with('success', 'Registration details received! Please enter the OTP sent to your email to complete registration.')
+                ->with('email', $request->email);
+                
+        } catch (\Exception $e) {
+            \Log::error('OTP sending failed during registration: ' . $e->getMessage());
+            
+            // Clear session data on error
+            session()->forget(['pending_registration', 'registration_otp', 'registration_otp_expires_at', 'registration_email']);
+            
+            return back()->with('error', 'Failed to send verification email. Please try again.');
+        }
     }
 
     public function loginPost(Request $request)
@@ -467,36 +247,140 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        // First validate credentials without logging in
-        $user = User::where('email', $request->email)->first();
-        
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->with('error', 'The provided credentials do not match our records.');
+        // Direct authentication without OTP
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            
+            return redirect()->route('user.dashboard')
+                ->with('success', 'Login successful!');
         }
 
-        // Store user ID in session for OTP verification
-        session(['pending_login_user_id' => $user->id]);
-        session(['pending_login_email' => $user->email]);
+        return back()->with('error', 'The provided credentials do not match our records.');
+    }
 
-        // Generate and send OTP
+    public function showRegisterOtpVerify()
+    {
+        $email = session('registration_email');
+        
+        if (!$email || !session('pending_registration')) {
+            return redirect()->route('register')
+                ->with('error', 'Registration session expired. Please start again.');
+        }
+        
+        return view('auth.register-otp-verify', [
+            'email' => $email
+        ]);
+    }
+
+    public function verifyRegisterOtp(Request $request)
+    {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'otp' => 'required|string|size:6',
+        ], [
+            'otp.size' => 'OTP must be exactly 6 digits.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
         try {
+            $email = session('registration_email');
+            $pendingRegistration = session('pending_registration');
+            
+            if (!$email || !$pendingRegistration) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.'
+                ], 400);
+            }
+
+            // Check if OTP has expired
+            if (\Carbon\Carbon::now()->gt(session('registration_otp_expires_at'))) {
+                // Clear expired session data
+                session()->forget(['pending_registration', 'registration_otp', 'registration_otp_expires_at', 'registration_email']);
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'OTP has expired. Please start registration again.'
+                ], 400);
+            }
+
+            // Verify OTP
+            if (session('registration_otp') !== $request->otp) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid OTP. Please check and try again.'
+                ], 400);
+            }
+
+            // Create the user account
+            $user = User::create($pendingRegistration);
+            
+            // Clear session data
+            session()->forget(['pending_registration', 'registration_otp', 'registration_otp_expires_at', 'registration_email']);
+
+            // Auto-login the user after successful registration
+            Auth::login($user);
+            $request->session()->regenerate();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Registration successful! Welcome to Gifts Hub!',
+                'redirect' => route('user.dashboard')
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('Registration OTP verification failed: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Registration failed. Please try again.'
+            ], 500);
+        }
+    }
+
+    public function resendRegisterOtp(Request $request)
+    {
+        $email = session('registration_email');
+        $pendingRegistration = session('pending_registration');
+        
+        if (!$email || !$pendingRegistration) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Registration session expired. Please start again.'
+            ], 400);
+        }
+
+        try {
+            // Generate new OTP
             $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             $expiresAt = \Carbon\Carbon::now()->addMinutes(5);
             
-            $user->otp = $otp;
-            $user->otp_expires_at = $expiresAt;
-            $user->save();
+            // Update session with new OTP
+            session([
+                'registration_otp' => $otp,
+                'registration_otp_expires_at' => $expiresAt
+            ]);
             
-            // Send OTP via email
-            \Mail::to($user->email)->send(new \App\Mail\SendOtpMail($otp));
+            // Send OTP via email (using queue for better performance)
+            \Mail::to($email)->queue(new \App\Mail\SendOtpMail($otp));
             
-            return redirect()->route('otp.verify.form')
-                ->with('success', 'Login credentials verified! Please enter the OTP sent to your email.')
-                ->with('email', $user->email);
-                
+            return response()->json([
+                'success' => true,
+                'message' => 'New OTP has been sent to your email address.'
+            ]);
+            
         } catch (\Exception $e) {
-            \Log::error('OTP sending failed during login: ' . $e->getMessage());
-            return back()->with('error', 'Failed to send OTP. Please try again.');
+            \Log::error('Registration OTP resend failed: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to resend OTP. Please try again.'
+            ], 500);
         }
     }
 

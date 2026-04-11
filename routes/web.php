@@ -19,6 +19,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\OtpVerificationController;
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
@@ -51,6 +52,44 @@ Route::get('register1', [UserController::class, 'register1'])->name('login');
 Route::post('/register', [UserController::class, 'registerPost'])->name('register.post');
 Route::post('/login', [UserController::class, 'loginPost'])->name('login.post');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
+// Registration OTP Verification Routes
+Route::get('/register/otp/verify', [UserController::class, 'showRegisterOtpVerify'])->name('register.otp.verify');
+Route::post('/register/otp/verify', [UserController::class, 'verifyRegisterOtp'])->name('register.otp.verify.post');
+Route::post('/register/otp/resend', [UserController::class, 'resendRegisterOtp'])->name('register.otp.resend');
+
+// Standalone OTP Verification Routes (for email verification only)
+Route::get('/otp/request', [OtpVerificationController::class, 'showOtpForm'])->name('otp.request.form');
+Route::post('/otp/send', [OtpVerificationController::class, 'sendOtp'])->name('otp.send');
+Route::get('/otp/verify', [OtpVerificationController::class, 'showVerifyForm'])->name('otp.verify.form');
+Route::post('/otp/verify', [OtpVerificationController::class, 'verifyOtp'])->name('otp.verify');
+Route::post('/otp/resend', [OtpVerificationController::class, 'resendOtp'])->name('otp.resend');
+
+// Debug route for OTP testing
+Route::get('/otp/debug', function() {
+    return response()->json([
+        'session_data' => session()->all(),
+        'user_otp_data' => \App\Models\User::where('email', session('otp_email') ?? session('pending_login_email'))->first(['id', 'email', 'otp', 'otp_expires_at'])
+    ]);
+})->name('otp.debug');
+
+// Debug route for registration OTP performance
+Route::get('/register/otp/debug', function() {
+    return response()->json([
+        'registration_session' => [
+            'pending_registration' => session('pending_registration'),
+            'registration_email' => session('registration_email'),
+            'registration_otp' => session('registration_otp'),
+            'registration_otp_expires_at' => session('registration_otp_expires_at'),
+        ],
+        'mail_config' => [
+            'mailer' => config('mail.default'),
+            'queue_connection' => config('queue.default'),
+        ],
+        'queue_jobs' => \Illuminate\Support\Facades\DB::table('jobs')->count(),
+        'current_time' => now()->toDateTimeString(),
+    ]);
+})->name('register.otp.debug');
 
 // Static pages routes
 Route::get('/about', [AboutController::class, 'index'])->name('about');
@@ -117,6 +156,9 @@ Route::post('admin/orders/bulk-update', [AdminController::class, 'bulkOrderStatu
 
 Route::get('admin/details', [AdminController::class, 'details'])->name('admin.details')->middleware('admin');
 
+// Messages Management Routes
+Route::get('admin/messages', [AdminController::class, 'messagesIndex'])->name('admin.messages.index')->middleware('admin');
+
 Route::get('/inventory', [AdminController::class, 'inventory'])->name('inventory.index');
 Route::get('/inventory/create', [AdminController::class, 'inventoryCreate'])->name('inventory.create');
 Route::post('/inventory/store', [AdminController::class, 'inventoryStore'])->name('inventory.store');
@@ -139,8 +181,6 @@ Route::post('/review/submit', [ReviewController::class, 'submit'])->name('review
 // Search routes
 Route::get('/search/autocomplete', [SearchController::class, 'autocomplete'])->name('search.autocomplete');
 Route::get('/search', [SearchController::class, 'search'])->name('search');
-
-
 
 Route::get('/khalti-test', function () {
     return view('khalti');

@@ -25,6 +25,8 @@ class User extends Authenticatable
         'address',
         'is_blocked',
         'role',
+        'otp',
+        'otp_expires_at',
     ];
 
     /**

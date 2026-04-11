@@ -36,6 +36,16 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
                         <h6>Manage Orders</h6>
                     </a>
+                    
+                    <a class="nav-link" href="{{ route('admin.messages.index') }}">
+                        <div class="sb-nav-link-icon position-relative">
+                            <i class="fas fa-envelope"></i>
+                            <span id="messageBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none; font-size: 0.6rem; margin-left: 8px;">
+                                0
+                            </span>
+                        </div>
+                        <h6>Messages</h6>
+                    </a>
                 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button"

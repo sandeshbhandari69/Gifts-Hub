@@ -10,6 +10,33 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="{{url('dashboard/css/styles.css')}}" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <script>
+        // Update message badge count
+        function updateMessageBadge() {
+            const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+            const unreadCount = messages.filter(msg => !msg.read).length;
+            const badge = document.getElementById('messageBadge');
+            
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        }
+        
+        // Update badge on page load
+        document.addEventListener('DOMContentLoaded', updateMessageBadge);
+        
+        // Update badge when storage changes (for cross-tab updates)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'contactMessages') {
+                updateMessageBadge();
+            }
+        });
+        </script>
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">

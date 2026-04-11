@@ -43,13 +43,10 @@
 
 body { font-family: var(--font-body); background: var(--brand-surface); }
 
-/* ══════════════════════════════════════
-   PAGE HEADER  — identical to products
-   ══════════════════════════════════════ */
 .page-header {
-    background: linear-gradient(135deg, var(--brand-dark) 0%, #ffffff 100%);
+    background: linear-gradient(135deg, #0891b2 0%, #14b8a6 50%, #10b981 100%);
     padding: 44px 0 40px;
-    margin-bottom: 48px;
+    margin-bottom: 0;
 }
 .page-eyebrow {
     display: inline-flex;
@@ -74,7 +71,7 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
     margin: 0 0 10px;
 }
 .page-subtitle {
-    color: #fff;
+    color: rgba(255,255,255,0.6);
     font-size: 0.92rem;
     margin: 0;
 }
@@ -111,7 +108,7 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
     width: 100%;
     height: 40px;
     border-radius: 50px;
-    border: 1.5px solid rgba(0, 0, 0, 0.14);
+    border: 1.5px solid rgba(26,32,53,0.14);
     background: var(--gh-bg);
     padding: 0 16px 0 40px;
     font-family: var(--gh-font-b);
@@ -335,11 +332,9 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
 
 @section('content')
 
-{{-- ── Page header — identical markup & classes to products page ── --}}
 <div class="page-header">
     <div class="container">
         <h1 class="page-title">All Categories</h1>
-        <p class="page-subtitle">Browse our curated gift collections for every occasion.</p>
     </div>
 </div>
 

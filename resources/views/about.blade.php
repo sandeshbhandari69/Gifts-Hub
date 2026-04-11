@@ -371,20 +371,6 @@
 
 <div class="ab-wrap">
 
-    {{-- ── PAGE HEADER (same gradient as categories) ── --}}
-    <div class="ab-header ab-fade">
-        <div class="container">
-            <p class="ab-header-eyebrow">Gifts Hub &nbsp;&middot;&nbsp; Our Story</p>
-            <h1 class="ab-header-title">
-                Gifts that say<br>
-                <em>exactly</em> what you feel.
-            </h1>
-            <p class="ab-header-sub">
-                Founded in 2024 with a simple belief — the right gift can say everything words cannot. We curate thoughtful, beautiful presents for every occasion.
-            </p>
-        </div>
-    </div>
-
     {{-- ── STATS BAR ── --}}
     <div class="ab-stats-bar ab-fade">
         <div class="container">

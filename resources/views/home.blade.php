@@ -88,17 +88,26 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
 #heroSlider .slide { position: absolute !important; top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important; opacity: 0 !important; transition: opacity 0.9s ease, transform 1.2s ease !important; transform: scale(1.04) !important; display: flex !important; align-items: center !important; pointer-events: none !important; z-index: 1 !important; }
 #heroSlider .slide.active { opacity: 1 !important; transform: scale(1) !important; z-index: 2 !important; pointer-events: auto !important; }
 #heroSlider .slide-bg { position: absolute !important; top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; }
-#heroSlider .slide-bg::after { content: '' !important; position: absolute !important; top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important; background: linear-gradient(105deg, rgba(10,14,20,0.92) 0%, rgba(10,14,20,0.55) 55%, rgba(10,14,20,0.15) 100%) !important; }
+#heroSlider .slide-bg::after { content: '' !important; position: absolute !important; top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important; background: none !important; }
 
-/* ── UPDATED SLIDE COLORS — dark charcoal left → teal/blue right ── */
+/* ── UPDATED SLIDE COLORS — same as header solid color ── */
 #heroSlider .slide:nth-child(1) .slide-bg {
-    background-image: radial-gradient(ellipse at 75% 50%, #0d4a4a 0%, #0a2a35 40%, #0d1117 100%);
+    background: url('{{ asset('assets/images/Hero/violet-gift-box-with-white-ribbon-blue-background-copy-space-text.jpg') }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 #heroSlider .slide:nth-child(2) .slide-bg {
-    background-image: radial-gradient(ellipse at 70% 50%, #0a3d4a 0%, #072535 40%, #0d1117 100%);
+    background: url('{{ asset('assets/images/Hero/violet-gift-box-with-white-ribbon-blue-background-copy-space-text.jpg') }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 #heroSlider .slide:nth-child(3) .slide-bg {
-    background-image: radial-gradient(ellipse at 72% 48%, #0b4040 0%, #0a2030 40%, #0d1117 100%);
+    background: url('{{ asset('assets/images/Hero/violet-gift-box-with-white-ribbon-blue-background-copy-space-text.jpg') }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #heroSlider .slide-content { position: relative !important; z-index: 3 !important; padding: 0 6vw !important; max-width: 680px !important; }
@@ -152,7 +161,6 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
     <div class="slide active">
         <div class="slide-bg" {{-- style="background-image:url('{{ asset('assets/images/hero/slide1.jpg') }}')" --}}></div>
         <div class="slide-content">
-            <div class="slide-eyebrow">Curated Gifts</div>
             <h1 class="slide-title">The Perfect <em>Gift</em><br>Finds You</h1>
             <p class="slide-desc">Discover curated gifts for every occasion, handpicked to create moments of joy and celebration.</p>
             <div class="slide-actions">
@@ -164,7 +172,6 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
     <div class="slide">
         <div class="slide-bg" {{-- style="background-image:url('{{ asset('assets/images/hero/slide2.jpg') }}')" --}}></div>
         <div class="slide-content">
-            <div class="slide-eyebrow">New Arrivals</div>
             <h1 class="slide-title">Give <em>Joy</em>,<br>Not Just Gifts</h1>
             <p class="slide-desc">From birthdays to anniversaries — every celebration deserves something extraordinary and memorable.</p>
             <div class="slide-actions">
@@ -175,7 +182,6 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
     <div class="slide">
         <div class="slide-bg" {{-- style="background-image:url('{{ asset('assets/images/hero/slide3.jpg') }}')" --}}></div>
         <div class="slide-content">
-            <div class="slide-eyebrow">Special Deals</div>
             <h1 class="slide-title">Celebrate<br><em>Every</em> Moment</h1>
             <p class="slide-desc">Explore our exclusive collection of premium gifts, thoughtfully designed to make every occasion unforgettable.</p>
             <div class="slide-actions">
