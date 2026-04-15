@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Message;
 
 class ContactController extends Controller
 {
@@ -22,7 +23,16 @@ class ContactController extends Controller
             'message'    => 'required|string',
         ]);
 
-        // Option B: Just redirect back with success (no mail setup needed)
+        // Save message to database
+        Message::create([
+            'first_name' => $validated['first_name'],
+            'last_name'  => $validated['last_name'],
+            'email'      => $validated['email'],
+            'subject'    => $validated['subject'] ?? 'No Subject',
+            'message'    => $validated['message'],
+            'read'       => false,
+        ]);
+
         return redirect()->route('contact.index')->with('success', true);
     }
 }

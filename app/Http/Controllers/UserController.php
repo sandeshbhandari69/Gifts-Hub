@@ -223,8 +223,8 @@ class UserController extends Controller
                 'registration_email' => $request->email
             ]);
             
-            // Send OTP via email (using queue for better performance)
-            \Mail::to($request->email)->queue(new \App\Mail\SendOtpMail($otp));
+            // Send OTP via email (synchronously for immediate delivery)
+            \Mail::to($request->email)->send(new \App\Mail\SendOtpMail($otp));
             
             return redirect()->route('register.otp.verify')
                 ->with('success', 'Registration details received! Please enter the OTP sent to your email to complete registration.')
@@ -251,7 +251,7 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             
-            return redirect()->route('user.dashboard')
+            return redirect()->route('home')
                 ->with('success', 'Login successful!');
         }
 
@@ -330,7 +330,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Registration successful! Welcome to Gifts Hub!',
-                'redirect' => route('user.dashboard')
+                'redirect' => route('home')
             ]);
             
         } catch (\Exception $e) {
@@ -366,8 +366,8 @@ class UserController extends Controller
                 'registration_otp_expires_at' => $expiresAt
             ]);
             
-            // Send OTP via email (using queue for better performance)
-            \Mail::to($email)->queue(new \App\Mail\SendOtpMail($otp));
+            // Send OTP via email (synchronously for immediate delivery)
+            \Mail::to($email)->send(new \App\Mail\SendOtpMail($otp));
             
             return response()->json([
                 'success' => true,
@@ -381,6 +381,42 @@ class UserController extends Controller
                 'success' => false,
                 'message' => 'Failed to resend OTP. Please try again.'
             ], 500);
+        }
+    }
+
+    public function forget()
+    {
+        return view('auth.forget');
+    }
+
+    public function forgetPost(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|min:6|confirmed',
+        ], [
+            'email.exists' => 'This email address is not registered in our system.',
+            'password.confirmed' => 'Password confirmation does not match.',
+        ]);
+
+        try {
+            $user = User::where('email', $request->email)->first();
+            
+            if ($user) {
+                // Update the user's password
+                $user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+                
+                return redirect()->route('login')
+                    ->with('success', 'Your password has been reset successfully! Please login with your new password.');
+            }
+            
+            return back()->with('error', 'User not found with this email address.');
+            
+        } catch (\Exception $e) {
+            \Log::error('Password reset failed: ' . $e->getMessage());
+            return back()->with('error', 'Failed to reset password. Please try again.');
         }
     }
 

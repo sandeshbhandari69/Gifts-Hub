@@ -161,8 +161,13 @@ class AdminController extends Controller
             'description' => 'nullable|string',
         ]);
 
+        // Get product information for inventory
+        $product = Product::find($request->product_id);
+        
         Inventory::create([
+            'product_name' => $product->p_name,
             'product_id' => $request->product_id,
+            'category' => $product->category->c_name ?? 'Unknown',
             'location' => $request->location,
             'available_quantity' => $request->available,
             'reserved_quantity' => $request->reserved,
@@ -386,7 +391,68 @@ class AdminController extends Controller
     // Messages Management Methods
     public function messagesIndex()
     {
-        return view('admin.messages.index');
+        $messages = \App\Models\Message::orderBy('created_at', 'desc')->get();
+        $unreadCount = \App\Models\Message::where('read', false)->count();
+        return view('admin.messages.index', compact('messages', 'unreadCount'));
+    }
+
+    public function getMessageJson($id)
+    {
+        $message = \App\Models\Message::find($id);
+        if (!$message) {
+            return response()->json(['error' => 'Message not found'], 404);
+        }
+        return response()->json($message);
+    }
+
+    public function markMessageRead($id)
+    {
+        $message = \App\Models\Message::find($id);
+        if (!$message) {
+            return response()->json(['success' => false, 'error' => 'Message not found'], 404);
+        }
+        
+        $message->update(['read' => true]);
+        
+        // Get updated unread count
+        $unreadCount = \App\Models\Message::where('read', false)->count();
+        
+        return response()->json([
+            'success' => true,
+            'unreadCount' => $unreadCount
+        ]);
+    }
+
+    public function markAllMessagesRead()
+    {
+        \App\Models\Message::where('read', false)->update(['read' => true]);
+        
+        // Check if this is an AJAX request
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'unreadCount' => 0
+            ]);
+        }
+        
+        return redirect()->route('admin.messages.index')->with('success', 'All messages marked as read!');
+    }
+
+    public function deleteMessage($id)
+    {
+        $message = \App\Models\Message::find($id);
+        if (!$message) {
+            return redirect()->route('admin.messages.index')->with('error', 'Message not found!');
+        }
+        
+        $message->delete();
+        return redirect()->route('admin.messages.index')->with('success', 'Message deleted successfully!');
+    }
+
+    public function deleteAllMessages()
+    {
+        \App\Models\Message::truncate();
+        return redirect()->route('admin.messages.index')->with('success', 'All messages deleted successfully!');
     }
      
 }

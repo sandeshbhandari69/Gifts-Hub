@@ -66,8 +66,8 @@ class OtpVerificationController extends Controller
             $user->otp_expires_at = $expiresAt;
             $user->save();
             
-            // Send OTP via email (using queue for better performance)
-            Mail::to($user->email)->queue(new SendOtpMail($otp));
+            // Send OTP via email (synchronously for immediate delivery)
+            Mail::to($user->email)->send(new SendOtpMail($otp));
             
             // Store email in session for verification step
             session(['otp_email' => $request->email]);
@@ -309,8 +309,8 @@ class OtpVerificationController extends Controller
             $user->otp_expires_at = $expiresAt;
             $user->save();
             
-            // Send OTP via email (using queue for better performance)
-            Mail::to($user->email)->queue(new SendOtpMail($otp));
+            // Send OTP via email (synchronously for immediate delivery)
+            Mail::to($user->email)->send(new SendOtpMail($otp));
             
             return response()->json([
                 'success' => true,

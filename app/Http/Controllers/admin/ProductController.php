@@ -44,7 +44,9 @@ class ProductController extends Controller
         // Automatically create inventory entry for new product
         $product = Product::latest()->first();
         Inventory::create([
+            'product_name' => $request->p_name,
             'product_id' => $product->p_id,
+            'category' => $product->category->c_name ?? 'Unknown',
             'location' => 'Warehouse 1', // Default location
             'available_quantity' => $request->p_stock,
             'reserved_quantity' => 0,

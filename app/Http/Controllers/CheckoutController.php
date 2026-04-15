@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Models\Order;
 
 class CheckoutController extends Controller
@@ -47,30 +48,27 @@ class CheckoutController extends Controller
             $khaltiService = app(\App\Services\KhaltiService::class);
             $purchaseOrderId = 'ORD-' . strtoupper(uniqid());
             
-            // Make amount into paisa. Khalti strictly requires minimum Rs 10 (1000 paisa) and maximum Rs 1000 (100000 paisa) for standard tests.
+            // Convert amount to paisa (Rs 1 = 100 paisa)
             $amountInPaisa = (int) ($total * 100);
-            $amountInPaisa = min(max($amountInPaisa, 1000), 100000); // Enforce Rs 10 - Rs 1000 limit
             
-            // Khalti usually expects a 10-digit phone number.
+            // Format phone number for Khalti
             $phone = preg_replace('/[^0-9]/', '', $request->phone);
             if (strlen($phone) < 10) {
                 $phone = str_pad($phone, 10, '0', STR_PAD_RIGHT);
             }
+            $phone = substr($phone, 0, 10); // Ensure exactly 10 digits
             
-            $payload = [
-                'return_url' => route('payment.callback'),
-                'website_url' => url('/'),
+            // Create payment data for Khalti
+            $paymentData = [
                 'amount' => $amountInPaisa,
                 'purchase_order_id' => $purchaseOrderId,
                 'purchase_order_name' => 'Order ' . $purchaseOrderId,
-                'customer_info' => [
-                    'name' => $request->first_name . ' ' . $request->last_name,
-                    'email' => $request->email,
-                    'phone' => substr($phone, 0, 10), // Ensure max 10
-                ]
+                'customer_name' => $request->first_name . ' ' . $request->last_name,
+                'customer_email' => $request->email,
+                'customer_phone' => $phone
             ];
             
-            // Store order details in session so that callback can save it after success
+            // Store order details in session for callback processing
             $orderData = [
                 'user_id' => auth()->id() ?? null,
                 'order_id' => $purchaseOrderId,
@@ -91,14 +89,32 @@ class CheckoutController extends Controller
             ];
             Session::put('pending_khalti_order', $orderData);
             
+            // Create payload using KhaltiService
+            $payload = $khaltiService->createPaymentPayload($paymentData);
             $response = $khaltiService->initiatePayment($payload);
             
             if (isset($response['payment_url'])) {
+                Log::info('Redirecting directly to Khalti payment URL', [
+                    'payment_url' => $response['payment_url'],
+                    'pidx' => $response['pidx'] ?? null,
+                    'order_id' => $purchaseOrderId
+                ]);
+                
+                // Direct redirect to Khalti payment URL (no intermediate page)
                 return redirect()->away($response['payment_url']);
             }
             
-            $errorMessage = isset($response['detail']) ? json_encode($response['detail']) : json_encode($response);
-            return redirect()->back()->with('error', 'Could not initiate Khalti payment. Reason: ' . $errorMessage);
+            // Handle errors
+            $errorMessage = 'Unknown error occurred';
+            if (isset($response['error']) && $response['error']) {
+                $errorMessage = $response['message'] ?? $response['detail'] ?? 'Khalti API Error';
+            } elseif (isset($response['detail'])) {
+                $errorMessage = is_array($response['detail']) ? json_encode($response['detail']) : $response['detail'];
+            } elseif (isset($response['message'])) {
+                $errorMessage = $response['message'];
+            }
+            
+            return redirect()->back()->with('error', 'Could not initiate Khalti payment: ' . $errorMessage);
         }
 
         // Create order data
