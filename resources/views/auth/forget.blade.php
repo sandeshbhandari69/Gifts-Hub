@@ -1,25 +1,25 @@
 @extends('layouts.auth')
 
 @push('title')
-<title>Register Page - Gifts Hub</title>
+<title>Forgot Password - Gifts Hub</title>
 @endpush
 
 @section('content')
 
-<!-- Modern Register Section -->
+<!-- Modern Forgot Password Section -->
 <section class="min-vh-100 d-flex align-items-center">
     <div class="container my-2">
         <div class="row justify-content-center">
             <div class="col-lg-6">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
-                        <div class="register-form-card">
+                        <div class="login-form-card">
                             <div class="text-center mb-3">
-                                <h2 class="form-title">Create Account</h2>
-                                <p class="form-subtitle mb-2">Join us to explore amazing gift collections</p>
+                                <h2 class="form-title">Reset Password</h2>
+                                <p class="form-subtitle mb-2">Enter your email and new password to reset your account</p>
                             </div>
 
-                            <form action="{{ route('register.post') }}" method="POST" autocomplete="off">
+                            <form action="{{ route('user.forget.post') }}" method="POST" autocomplete="off">
                                 @csrf
                                 
                                 @if(session('error'))
@@ -36,18 +36,14 @@
                                     </div>
                                 @endif
 
-                                <div class="mb-3">
-                                    <label for="name" class="form-label fw-semibold">
-                                        <i class="fa-solid fa-user me-2 text-primary"></i>Full Name
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-modern" 
-                                           id="name" 
-                                           name="name" 
-                                           placeholder="Enter your full name" 
-                                           required 
-                                           autocomplete="off">
-                                </div>
+                                @if ($errors->any())
+                                    <div class="alert alert-danger alert-modern" role="alert">
+                                        <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                                        @foreach ($errors->all() as $error)
+                                            {{ $error }}<br>
+                                        @endforeach
+                                    </div>
+                                @endif
 
                                 <div class="mb-3">
                                     <label for="email" class="form-label fw-semibold">
@@ -57,21 +53,21 @@
                                            class="form-control form-control-modern" 
                                            id="email" 
                                            name="email" 
-                                           placeholder="Enter your email" 
+                                           placeholder="Enter your registered email" 
                                            required 
                                            autocomplete="off">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="password" class="form-label fw-semibold">
-                                        <i class="fa-solid fa-lock me-2 text-primary"></i>Password
+                                        <i class="fa-solid fa-lock me-2 text-primary"></i>New Password
                                     </label>
                                     <div class="password-toggle">
                                         <input type="password" 
                                                class="form-control form-control-modern" 
                                                id="password" 
                                                name="password" 
-                                               placeholder="Enter your password" 
+                                               placeholder="Enter new password" 
                                                required 
                                                autocomplete="new-password">
                                         <button type="button" class="password-toggle-btn" onclick="togglePassword('password')">
@@ -82,14 +78,14 @@
 
                                 <div class="mb-3">
                                     <label for="password_confirmation" class="form-label fw-semibold">
-                                        <i class="fa-solid fa-lock me-2 text-primary"></i>Confirm Password
+                                        <i class="fa-solid fa-lock me-2 text-primary"></i>Confirm New Password
                                     </label>
                                     <div class="password-toggle">
                                         <input type="password" 
                                                class="form-control form-control-modern" 
                                                id="password_confirmation" 
                                                name="password_confirmation" 
-                                               placeholder="Confirm your password" 
+                                               placeholder="Confirm new password" 
                                                required 
                                                autocomplete="new-password">
                                         <button type="button" class="password-toggle-btn" onclick="togglePassword('password_confirmation')">
@@ -98,23 +94,13 @@
                                     </div>
                                 </div>
 
-                                
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="terms" required>
-                                        <label class="form-check-label" for="terms">
-                                            I agree to the <a href="#" class="terms-link">Terms and Conditions</a>
-                                        </label>
-                                    </div>
-                                </div>
-
                                 <button type="submit" class="btn btn-primary-modern w-100 mb-3">
-                                    <i class="fa-solid fa-user-plus me-2"></i>Create Account
+                                    <i class="fa-solid fa-key me-2"></i>Reset Password
                                 </button>
 
                                 <div class="text-center">
-                                    <p class="signup-prompt">Already have an account? 
-                                        <a href="{{url('register1')}}" class="signup-link">Sign in here</a>
+                                    <p class="signup-prompt">Remember your password? 
+                                        <a href="{{ route('login') }}" class="signup-link">Back to login</a>
                                     </p>
                                 </div>
                             </form>

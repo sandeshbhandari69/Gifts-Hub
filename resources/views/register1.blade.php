@@ -7,35 +7,16 @@
 @section('content')
 
 <!-- Modern Login Section -->
-<section class="min-vh-100 d-flex align-items-center gradient-bg">
-    <div class="container my-5">
+<section class="min-vh-100 d-flex align-items-center">
+    <div class="container my-2">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
+            <div class="col-lg-6">
                 <div class="row align-items-center">
-                    <div class="col-lg-5 mb-4 mb-lg-0">
-                        <div class="login-illustration text-center">
-                            <div class="floating-card">
-                                <img src="{{ asset('assets/images/Hero/login.avif') }}" 
-                                     class="img-fluid rounded-4" 
-                                     alt="Login Illustration"
-                                     style="max-width: 100%; height: auto;">
-                                <div class="overlay-pattern"></div>
-                            </div>
-                            <div class="mt-4">
-                                <h3 class="text-white fw-bold">Welcome Back!</h3>
-                                <p class="text-white-50">Access your personalized gift recommendations and order history</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 offset-lg-1">
+                    <div class="col-lg-12">
                         <div class="login-form-card">
-                            <div class="text-center mb-4">
-                                <div class="logo-circle mb-3">
-                                    <i class="fa-solid fa-gift fa-2x text-primary"></i>
-                                </div>
+                            <div class="text-center mb-3">
                                 <h2 class="form-title">Sign In</h2>
-                                <p class="form-subtitle">Enter your credentials to access your account</p>
+                                <p class="form-subtitle mb-2">Enter your credentials to access your account</p>
                             </div>
 
                             <form action="{{ route('login.post') }}" method="POST" autocomplete="off">
@@ -55,7 +36,7 @@
                                     </div>
                                 @endif
 
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <label for="email" class="form-label fw-semibold">
                                         <i class="fa-solid fa-envelope me-2 text-primary"></i>Email Address
                                     </label>
@@ -68,7 +49,7 @@
                                            autocomplete="off">
                                 </div>
 
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <label for="password" class="form-label fw-semibold">
                                         <i class="fa-solid fa-lock me-2 text-primary"></i>Password
                                     </label>
@@ -86,18 +67,18 @@
                                     </div>
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="remember">
                                         <label class="form-check-label" for="remember">
                                             Remember me
                                         </label>
                                     </div>
-                                    <a href="#" class="forgot-link">Forgot password?</a>
+                                    <a href="{{ route('user.forget') }}" class="forgot-link">Forgot password?</a>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary-modern w-100 mb-4">
-                                    <i class="fa-solid fa-sign-in-alt me-2"></i>Sign In
+                                <button type="submit" class="btn btn-primary-modern w-100 mb-3">
+                                    Sign In
                                 </button>
 
                                 <div class="text-center">

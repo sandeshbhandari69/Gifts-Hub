@@ -42,9 +42,10 @@ Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
-Route::get('/checkout/{slug}', [CheckoutController::class, 'checkout'])->name('checkout');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+Route::get('/checkout', [CheckoutController::class, 'checkoutDirect'])->name('checkout.direct');
+Route::get('/checkout/{slug}', [CheckoutController::class, 'checkout'])->name('checkout');
 Route::get('register', [UserController::class, 'register']);
 Route::get('register1', [UserController::class, 'register1'])->name('login');
 
@@ -52,6 +53,10 @@ Route::get('register1', [UserController::class, 'register1'])->name('login');
 Route::post('/register', [UserController::class, 'registerPost'])->name('register.post');
 Route::post('/login', [UserController::class, 'loginPost'])->name('login.post');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
+// User Forgot Password Routes
+Route::get('/forget-password', [UserController::class, 'forget'])->name('user.forget');
+Route::post('/forget-password', [UserController::class, 'forgetPost'])->name('user.forget.post');
 
 // Registration OTP Verification Routes
 Route::get('/register/otp/verify', [UserController::class, 'showRegisterOtpVerify'])->name('register.otp.verify');
@@ -94,7 +99,6 @@ Route::get('/register/otp/debug', function() {
 // Static pages routes
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories');
-Route::get('contact/index', [ContactController::class, 'index'])->name('contact.index');
 
 // User dashboard routes
 Route::get('user/', [UserController::class, 'index'])->name('user.dashboard');
@@ -158,6 +162,11 @@ Route::get('admin/details', [AdminController::class, 'details'])->name('admin.de
 
 // Messages Management Routes
 Route::get('admin/messages', [AdminController::class, 'messagesIndex'])->name('admin.messages.index')->middleware('admin');
+Route::delete('admin/messages/{id}', [AdminController::class, 'deleteMessage'])->name('admin.messages.delete')->middleware('admin');
+Route::post('admin/messages/{id}/mark-read', [AdminController::class, 'markMessageRead'])->name('admin.messages.mark.read')->middleware('admin');
+Route::post('admin/messages/delete-all', [AdminController::class, 'deleteAllMessages'])->name('admin.messages.delete.all')->middleware('admin');
+Route::post('admin/messages/mark-all-read', [AdminController::class, 'markAllMessagesRead'])->name('admin.messages.mark.all.read')->middleware('admin');
+Route::get('admin/messages/{id}/json', [AdminController::class, 'getMessageJson'])->name('admin.messages.json')->middleware('admin');
 
 Route::get('/inventory', [AdminController::class, 'inventory'])->name('inventory.index');
 Route::get('/inventory/create', [AdminController::class, 'inventoryCreate'])->name('inventory.create');
@@ -177,13 +186,17 @@ Route::post('/purchase-report/filter', [AdminController::class, 'purchaseReportF
 
 // Review routes
 Route::post('/review/submit', [ReviewController::class, 'submit'])->name('review.submit');
+Route::post('/review/delete', [ReviewController::class, 'delete'])->name('review.delete');
+Route::post('/review/update', [ReviewController::class, 'update'])->name('review.update');
 
 // Search routes
 Route::get('/search/autocomplete', [SearchController::class, 'autocomplete'])->name('search.autocomplete');
 Route::get('/search', [SearchController::class, 'search'])->name('search');
+
 
 Route::get('/khalti-test', function () {
     return view('khalti');
 });
 Route::post('/payment/initiate', [PaymentController::class, 'initiate'])->name('payment.initiate');
 Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
+

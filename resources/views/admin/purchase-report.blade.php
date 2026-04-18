@@ -4,6 +4,95 @@
 <title>Purchase Report</title>
 @endpush
 
+@push('styles')
+<style>
+@media print {
+    body {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .table {
+        font-size: 11px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 4px !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    .bg-danger,
+    .bg-info,
+    .bg-secondary {
+        background: #f8f9fa !important;
+        color: #000 !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    .text-white {
+        color: #000 !important;
+    }
+    
+    .btn {
+        display: none !important;
+    }
+    
+    .pagination,
+    nav {
+        display: none !important;
+    }
+    
+    .container-fluid {
+        max-width: 100% !important;
+        padding: 10px !important;
+    }
+    
+    h4 {
+        font-size: 16px !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .card-body {
+        padding: 15px !important;
+    }
+    
+    .row {
+        margin: 0 !important;
+    }
+    
+    .col-md-4 {
+        padding: 5px !important;
+        width: 33.33% !important;
+        float: left !important;
+    }
+    
+    @page {
+        margin: 1cm;
+        size: A4 portrait;
+    }
+    
+    .table-responsive {
+        overflow: visible !important;
+    }
+    
+    .text-end {
+        text-align: right !important;
+    }
+}
+</style>
+@endpush
+
 @section('content')
 <div id="layoutSidenav_content">
 <main>
@@ -12,7 +101,12 @@
 <div class="card mb-4">
 <div class="card-body">
 
-<h4 class="mb-4">Purchase Report</h4>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Purchase Report</h4>
+    <button onclick="window.print()" class="btn btn-outline-primary no-print">
+        <i class="fas fa-print me-2"></i>Print Report
+    </button>
+</div>
 
 {{-- Summary Cards --}}
 <div class="row mb-4">
@@ -49,7 +143,7 @@ Rs. {{ number_format($averagePurchase, 2) }}
 </div>
 
 {{-- Date Filter --}}
-<form method="GET" action="{{ route('purchase.report') }}">
+<form method="GET" action="{{ route('purchase.report') }}" class="no-print">
 <div class="row mb-4">
 <div class="col-md-4">
 <label>From Date</label>
@@ -112,7 +206,7 @@ Rs. {{ number_format($averagePurchase, 2) }}
 </div>
 
 {{-- Pagination --}}
-<div class="d-flex justify-content-between align-items-center mt-3">
+<div class="d-flex justify-content-between align-items-center mt-3 no-print">
 <div class="text-muted small">
 Showing {{ $purchases->firstItem() ?? 0 }} to {{ $purchases->lastItem() ?? 0 }} of {{ $purchases->total() }} entries
 </div>

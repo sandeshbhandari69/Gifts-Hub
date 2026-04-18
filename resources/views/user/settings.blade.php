@@ -1,7 +1,7 @@
 @extends('user.layouts.main')
 
 @push('title')
-    <title>Account & Billing</title>
+    <title>Profile</title>
 @endpush
 
 @section('content')
@@ -25,7 +25,7 @@
                 <div class="card mb-4">
                     <div>
                         <div class="card-body">
-                            <h5 class="mb-4 pt-3">Account Settings</h5>
+                            <h5 class="mb-4 pt-3">Profile Information</h5>
                             <form action="{{ route('user.update.profile') }}" method="POST">
                                 @csrf
                                 <div class="row">
@@ -74,33 +74,36 @@
 
                 {{-- ================= PASSWORD CHANGE ================= --}}
                 <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="mb-4 pt-3">Change Password</h5>
-                        <form action="{{ route('user.update.password') }}" method="POST">
-                            @csrf
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Current Password</label>
-                                    <input type="password" name="current_password" class="form-control" required>
-                                </div>
+                    <div>
+                        <div class="card-body">
+                                    <h5 class="mb-4 pt-3">Change Password</h5>
+                                    <form action="{{ route('user.update.password') }}" method="POST">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Current Password</label>
+                                                <input type="password" name="current_password" class="form-control" required>
+                                            </div>
 
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">New Password</label>
-                                    <input type="password" name="password" class="form-control" required minlength="6">
-                                </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">New Password</label>
+                                                <input type="password" name="password" class="form-control" required minlength="6">
+                                            </div>
 
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Confirm Password</label>
-                                    <input type="password" name="password_confirmation" class="form-control" required>
-                                </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Confirm Password</label>
+                                                <input type="password" name="password_confirmation" class="form-control" required>
+                                            </div>
 
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn btn-warning">Update Password</button>
+                                            <div class="col-md-12">
+                                                <button type="submit" class="btn btn-warning">Update Password</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
         </main>
 @endsection

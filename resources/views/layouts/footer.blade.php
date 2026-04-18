@@ -40,10 +40,10 @@
                 <h5>SOCIAL MEDIA</h5>
 
                 <ul>
-                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
-                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
-                    <li><a href="#"><i class="fab fa-linkedin"></i> Linkedin</a></li>
-                    <li><a href="#"><i class="fab fa-tiktok"></i> TikTok</a></li>
+                    <li><a href="https://www.facebook.com"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://www.instagram.com"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="https://www.linkedin.com/company"><i class="fab fa-linkedin"></i> Linkedin</a></li>
+                    <li><a href="https://www.tiktok.com"><i class="fab fa-tiktok"></i> TikTok</a></li>
                 </ul>
 
             </div>

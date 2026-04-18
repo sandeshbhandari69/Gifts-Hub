@@ -6,29 +6,11 @@
 
 @section('content')
 
-<!-- Modern OTP Verification Section -->
-<section class="min-vh-100 d-flex align-items-center gradient-bg">
-    <div class="container my-5">
+<!--  OTP Verification Section -->
+<section class="min-vh-100 d-flex align-items-center" style="background-color: white;">
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="row align-items-center">
-                    <div class="col-lg-5 mb-4 mb-lg-0">
-                        <div class="otp-illustration text-center">
-                            <div class="floating-card">
-                                <img src="{{ asset('assets/images/Hero/login.avif') }}" 
-                                     class="img-fluid rounded-4" 
-                                     alt="OTP Verification"
-                                     style="max-width: 100%; height: auto;">
-                                <div class="overlay-pattern"></div>
-                            </div>
-                            <div class="mt-4">
-                                <h3 class="text-white fw-bold">Verify Your Email</h3>
-                                <p class="text-white-50">We've sent a verification code to your email address</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 offset-lg-1">
+            <div class="col-lg-6 col-md-8 col-sm-10">
                         <div class="otp-form-card">
                             <div class="text-center mb-4">
                                 <div class="logo-circle mb-3">
@@ -99,7 +81,6 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -130,7 +111,7 @@ document.getElementById('otpVerifyForm').addEventListener('submit', function(e) 
         method: 'POST',
         body: formData,
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json'
         },
         signal: controller.signal
@@ -222,7 +203,7 @@ document.getElementById('resendBtn').addEventListener('click', function() {
     fetch('{{ route("register.otp.resend") }}', {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Content-Type': 'application/json'
         },
         signal: resendController.signal

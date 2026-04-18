@@ -243,11 +243,19 @@ document.getElementById('otpRequestForm').addEventListener('submit', function(e)
         method: 'POST',
         body: new FormData(form),
         headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         if (data.success) {
             // Show success message
             showAlert('success', data.message);
@@ -262,8 +270,12 @@ document.getElementById('otpRequestForm').addEventListener('submit', function(e)
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        showAlert('danger', 'An error occurred. Please try again.');
+        console.error('Network error:', error);
+        if (error.message.includes('Failed to fetch')) {
+            showAlert('danger', 'Network error. Please check your connection and try again.');
+        } else {
+            showAlert('danger', `Error: ${error.message}. Please try again.`);
+        }
     })
     .finally(() => {
         // Reset button state
@@ -284,7 +296,17 @@ function showAlert(type, message) {
         </div>
     `;
     
-    document.querySelector('.card-body').insertAdjacentHTML('afterbegin', alertHtml);
+    const cardBody = document.querySelector('.card-body');
+    if (cardBody) {
+        cardBody.insertAdjacentHTML('afterbegin', alertHtml);
+    } else {
+        console.error('Card body element not found');
+        // Fallback: insert at the beginning of the form
+        const form = document.getElementById('otpRequestForm');
+        if (form) {
+            form.insertAdjacentHTML('beforebegin', alertHtml);
+        }
+    }
 }
 </script>
 @endsection

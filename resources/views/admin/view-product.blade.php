@@ -118,7 +118,6 @@
                 </div>
             </div>
         </main>
-    </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {

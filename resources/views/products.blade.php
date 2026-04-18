@@ -124,7 +124,7 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
             </div>
         @else
             <div class="row products-grid">
-                @foreach($products as $product)
+                @foreach($products->take(8) as $product)
                 <div class="col-lg-3 col-md-6 mb-0">
                     <div class="product-card">
 
