@@ -114,11 +114,6 @@ Rs. {{ number_format($cleanPrice * $item['quantity'],2) }}
 </div>
 
 <div class="d-flex">
-    <h5>Discount:</h5>
-    <h5 class="ms-auto" id="cartDiscount">Rs. 0</h5>
-</div>
-
-<div class="d-flex">
     <h5>Shipping:</h5>
     <h5 class="ms-auto">Free</h5>
 </div>
@@ -200,14 +195,10 @@ function updateCartTotals() {
         subtotal += price * qty;
     });
 
-    let discount = subtotal * 0.10; // 10% discount
-    let total = subtotal - discount;
+    let total = subtotal;
 
     document.getElementById('cartSubtotal').textContent =
         'Rs. ' + subtotal.toLocaleString('en-US', {minimumFractionDigits:2});
-
-    document.getElementById('cartDiscount').textContent =
-        'Rs. ' + discount.toLocaleString('en-US', {minimumFractionDigits:2});
 
     document.getElementById('cartTotal').textContent =
         'Rs. ' + total.toLocaleString('en-US', {minimumFractionDigits:2});
@@ -224,6 +215,7 @@ function updateServer(id, qty) {
         },
         body: JSON.stringify({
             id:id,
+            action:'set',
             quantity:qty
         })
     });

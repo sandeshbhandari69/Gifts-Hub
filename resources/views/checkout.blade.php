@@ -15,10 +15,9 @@ body {
 
 /* ===== HEADER ===== */
 .checkout-header {
-    background: linear-gradient(135deg, #4e73df, #224abe);
-    color: #fff;
-    padding: 40px 0;
-    border-radius: 0 0 20px 20px;
+    background: linear-gradient(135deg, #0891b2 0%, #14b8a6 50%, #10b981 100%);
+    padding: 44px 0 40px;
+    margin-bottom: 0;
 }
 
 /* ===== CARD ===== */
@@ -26,7 +25,7 @@ body {
     background: #fff;
     border-radius: 15px;
     padding: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(250, 248, 248, 0.97);
     margin-bottom: 25px;
 }
 
@@ -94,8 +93,8 @@ body {
 </style>
 
 <!-- HEADER -->
-<div class="checkout-header text-center">
-    <h1><i class="fa-solid fa-cart-shopping"></i> Checkout</h1>
+<div class="checkout-header text-light text-center">
+    <h1 ></i> Checkout</h1>
 </div>
 
 @if($cartItems && count($cartItems) > 0)
@@ -116,7 +115,7 @@ body {
         </div>
     @endif
 
-    <form action="{{ route('checkout.process') }}" method="POST">
+    <form action="{{ route('checkout.process') }}" method="POST" id="checkoutForm">
         @csrf
 
         <div class="row">
@@ -223,7 +222,7 @@ body {
                         <input type="radio" name="payment_method" value="cod" checked> Cash on Delivery
                     </label>
 
-                    <button type="submit" class="btn btn-place-order w-100 mt-3">
+                    <button type="submit" class="btn btn-place-order w-100 mt-3" id="placeOrderBtn">
                         Place Order
                     </button>
                 </div>
@@ -247,5 +246,56 @@ body {
 </div>
 
 @endif
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+    
+    // Add click handler for payment method selection
+    paymentMethods.forEach(method => {
+        method.addEventListener('change', function() {
+            if (this.value === 'khalti') {
+                placeOrderBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Pay with Khalti';
+                placeOrderBtn.style.background = '#6a11cb';
+            } else if (this.value === 'esewa') {
+                placeOrderBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Pay with Esewa';
+                placeOrderBtn.style.background = '#009900';
+            } else {
+                placeOrderBtn.innerHTML = 'Place Order';
+                placeOrderBtn.style.background = '#ff6600';
+            }
+        });
+    });
+    
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        const selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
+        
+        if (selectedPayment === 'khalti' || selectedPayment === 'esewa') {
+            // Show loading state for online payments
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Redirecting to payment...';
+            
+            // Add a small delay to show the loading state
+            setTimeout(() => {
+                form.submit();
+            }, 500);
+        } else {
+            // Normal submission for COD and other methods
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+        }
+    });
+    
+    // Initialize button text based on default selection
+    const defaultPayment = document.querySelector('input[name="payment_method"]:checked');
+    if (defaultPayment && defaultPayment.value === 'cod') {
+        placeOrderBtn.innerHTML = 'Place Order';
+        placeOrderBtn.style.background = '#ff6600';
+    }
+});
+</script>
 
 @endsection

@@ -62,8 +62,6 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
 .category-card { background: var(--brand-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: hidden; transition: var(--transition); height: 100%; display: flex; flex-direction: column; text-decoration: none; color: inherit; }
 .category-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-4px); color: inherit; }
 .category-card .cat-img-wrap { width: 100%; aspect-ratio: 4 / 3; background: linear-gradient(135deg, #f8f0ea 0%, #f0e4d7 100%); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--brand-primary); position: relative; overflow: hidden; }
-.category-card:hover .cat-img-wrap::after { background: rgba(196,82,42,0.06); }
-.category-card .cat-img-wrap::after { content: ''; position: absolute; inset: 0; background: rgba(196,82,42,0); transition: var(--transition); }
 .category-card .cat-info { padding: 14px 18px 18px; }
 .category-card .cat-name { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin: 0 0 3px; }
 .category-card .cat-count { font-size: 0.78rem; color: var(--text-muted); }
@@ -74,176 +72,279 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
 .empty-state i { font-size: 2.5rem; margin-bottom: 12px; display: block; opacity: 0.4; }
 .section-divider { height: 1px; background: var(--border-color); margin: 0 var(--bs-gutter-x, 12px); }
 
+
 /* ══════════════════════════════════════════
-   HERO SLIDER
+   SPLIT HERO  (replaces slider)
 ══════════════════════════════════════════ */
-#heroSlider {
-    position: relative !important;
-    height: 92vh !important;
-    min-height: 520px !important;
-    overflow: hidden !important;
-    background: #0d1117 !important;
-    font-family: 'DM Sans', sans-serif;
-}
-#heroSlider .slide { position: absolute !important; top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important; opacity: 0 !important; transition: opacity 0.9s ease, transform 1.2s ease !important; transform: scale(1.04) !important; display: flex !important; align-items: center !important; pointer-events: none !important; z-index: 1 !important; }
-#heroSlider .slide.active { opacity: 1 !important; transform: scale(1) !important; z-index: 2 !important; pointer-events: auto !important; }
-#heroSlider .slide-bg { position: absolute !important; top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; }
-#heroSlider .slide-bg::after { content: '' !important; position: absolute !important; top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important; background: none !important; }
-
-/* ── UPDATED SLIDE COLORS — same as header solid color ── */
-#heroSlider .slide:nth-child(1) .slide-bg {
-    background: url('{{ asset('assets/images/Hero/violet-gift-box-with-white-ribbon-blue-background-copy-space-text.jpg') }}');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-#heroSlider .slide:nth-child(2) .slide-bg {
-    background: url('{{ asset('assets/images/Hero/violet-gift-box-with-white-ribbon-blue-background-copy-space-text.jpg') }}');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-#heroSlider .slide:nth-child(3) .slide-bg {
-    background: url('{{ asset('assets/images/Hero/violet-gift-box-with-white-ribbon-blue-background-copy-space-text.jpg') }}');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+.hero-split {
+    background: var(--brand-dark);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 480px;
+    overflow: hidden;
 }
 
-#heroSlider .slide-content { position: relative !important; z-index: 3 !important; padding: 0 6vw !important; max-width: 680px !important; }
-#heroSlider .slide-eyebrow { display: inline-flex !important; align-items: center !important; gap: 10px !important; font-size: 0.70rem !important; font-weight: 600 !important; letter-spacing: 0.22em !important; text-transform: uppercase !important; color: #d4a853 !important; margin-bottom: 18px !important; opacity: 0 !important; transform: translateY(20px) !important; transition: opacity 0.6s ease 0.30s, transform 0.6s ease 0.30s !important; }
-#heroSlider .slide-eyebrow::before { content: '' !important; display: block !important; width: 30px !important; height: 1px !important; background: #d4a853 !important; }
-#heroSlider .slide.active .slide-eyebrow { opacity: 1 !important; transform: translateY(0) !important; }
-#heroSlider .slide-title { font-family: 'Playfair Display', serif !important; font-size: clamp(2.6rem, 5.5vw, 4.8rem) !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.1 !important; margin-bottom: 18px !important; opacity: 0 !important; transform: translateY(28px) !important; transition: opacity 0.7s ease 0.45s, transform 0.7s ease 0.45s !important; }
-#heroSlider .slide.active .slide-title { opacity: 1 !important; transform: translateY(0) !important; }
-#heroSlider .slide-title em { font-style: italic !important; color: #e8896a !important; }
-#heroSlider .slide-desc { font-size: 1rem !important; color: rgba(255,255,255,0.72) !important; line-height: 1.8 !important; max-width: 420px !important; margin-bottom: 32px !important; font-weight: 300 !important; opacity: 0 !important; transform: translateY(20px) !important; transition: opacity 0.6s ease 0.60s, transform 0.6s ease 0.60s !important; }
-#heroSlider .slide.active .slide-desc { opacity: 1 !important; transform: translateY(0) !important; }
-#heroSlider .slide-actions { display: flex !important; gap: 12px !important; align-items: center !important; flex-wrap: wrap !important; opacity: 0 !important; transform: translateY(20px) !important; transition: opacity 0.6s ease 0.75s, transform 0.6s ease 0.75s !important; }
-#heroSlider .slide.active .slide-actions { opacity: 1 !important; transform: translateY(0) !important; }
-.btn-slide-primary { display: inline-flex !important; align-items: center !important; gap: 8px !important; padding: 13px 30px !important; background: #c4522a !important; color: #fff !important; font-family: 'DM Sans', sans-serif !important; font-weight: 600 !important; font-size: 0.88rem !important; text-decoration: none !important; border-radius: 50px !important; border: none !important; cursor: pointer !important; transition: background 0.3s, transform 0.3s !important; }
-.btn-slide-primary:hover { background: #e8896a !important; transform: translateY(-2px) !important; color: #fff !important; }
-.btn-slide-ghost { display: inline-flex !important; align-items: center !important; gap: 8px !important; padding: 13px 26px !important; background: transparent !important; color: rgba(255,255,255,0.85) !important; font-family: 'DM Sans', sans-serif !important; font-weight: 500 !important; font-size: 0.88rem !important; text-decoration: none !important; border-radius: 50px !important; border: 1.5px solid rgba(255,255,255,0.35) !important; transition: border-color 0.3s, background 0.3s !important; cursor: pointer !important; }
-.btn-slide-ghost:hover { border-color: rgba(255,255,255,0.75) !important; background: rgba(255,255,255,0.09) !important; color: #fff !important; }
-#heroSlider .slider-controls { position: absolute !important; bottom: 36px !important; left: 6vw !important; z-index: 20 !important; display: flex !important; align-items: center !important; gap: 18px !important; }
-#heroSlider .slider-dots { display: flex !important; gap: 8px !important; }
-#heroSlider .slider-dot { width: 26px !important; height: 3px !important; background: rgba(255,255,255,0.30) !important; border-radius: 2px !important; cursor: pointer !important; border: none !important; padding: 0 !important; transition: width 0.4s ease, background 0.4s ease !important; }
-#heroSlider .slider-dot.active { background: #d4a853 !important; width: 46px !important; }
-#heroSlider .slider-arrows { display: flex !important; gap: 8px !important; }
-#heroSlider .slider-arrow { width: 40px !important; height: 40px !important; border-radius: 50% !important; border: 1.5px solid rgba(255,255,255,0.35) !important; background: transparent !important; color: #fff !important; font-size: 13px !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; transition: background 0.3s, border-color 0.3s !important; }
-#heroSlider .slider-arrow:hover { background: #c4522a !important; border-color: #c4522a !important; }
-#heroSlider .scroll-hint { position: absolute !important; bottom: 44px !important; right: 5vw !important; z-index: 10 !important; display: flex !important; flex-direction: column !important; align-items: center !important; gap: 8px !important; color: rgba(255,255,255,0.35) !important; font-size: 0.60rem !important; letter-spacing: 0.18em !important; text-transform: uppercase !important; }
-#heroSlider .scroll-line { width: 1px !important; height: 38px !important; background: rgba(255,255,255,0.22) !important; animation: scrollAnim 2s ease-in-out infinite !important; }
-@keyframes scrollAnim { 0% { transform: scaleY(0); transform-origin: top; } 49% { transform: scaleY(1); transform-origin: top; } 50% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+/* Left – text side */
+.hero-split .hero-left {
+    padding: 64px 48px 64px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.hero-split .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brand-gold);
+    margin-bottom: 20px;
+}
+.hero-split .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: var(--brand-gold);
+}
+.hero-split .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.1;
+    margin-bottom: 18px;
+}
+.hero-split .hero-title em { font-style: italic; color: var(--brand-secondary); }
+.hero-split .hero-desc {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.8;
+    max-width: 380px;
+    margin-bottom: 34px;
+    font-weight: 300;
+}
+.hero-split .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-hero-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    background: var(--brand-primary);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-decoration: none;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.btn-hero-primary:hover { background: var(--brand-secondary); transform: translateY(-2px); color: #fff; }
+.btn-hero-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 24px;
+    background: transparent;
+    color: rgba(255,255,255,0.82);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.88rem;
+    text-decoration: none;
+    border-radius: 50px;
+    border: 1.5px solid rgba(255,255,255,0.32);
+    transition: var(--transition);
+    cursor: pointer;
+}
+.btn-hero-ghost:hover { border-color: rgba(255,255,255,0.72); background: rgba(255,255,255,0.09); color: #fff; }
 
-/* Trust bar */
-.trust-bar { background: #1c1917 !important; padding: 12px 0 !important; overflow: hidden !important; }
-.trust-track { display: flex !important; gap: 56px !important; animation: marquee 22s linear infinite !important; white-space: nowrap !important; }
-.trust-item { display: flex !important; align-items: center !important; gap: 9px !important; font-size: 0.74rem !important; font-weight: 500 !important; letter-spacing: 0.07em !important; color: rgba(255,255,255,0.55) !important; flex-shrink: 0 !important; font-family: 'DM Sans', sans-serif !important; }
-.trust-item i { color: #d4a853 !important; }
+/* Right – stats mosaic */
+.hero-split .hero-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 3px;
+    background: rgba(255,255,255,0.04);
+}
+.hero-stat-cell {
+    background: rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 28px 16px;
+    transition: var(--transition);
+}
+.hero-stat-cell:hover { background: rgba(255,255,255,0.10); }
+.hero-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(196,82,42,0.20);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--brand-secondary);
+}
+.hero-stat-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+.hero-stat-lbl {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    letter-spacing: 0.03em;
+}
+
+/* Hero image variant (when real image available) */
+.hero-split .hero-image-side {
+    position: relative;
+    overflow: hidden;
+}
+.hero-split .hero-image-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.hero-split .hero-image-side::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(28,25,23,0.3) 0%, transparent 60%);
+}
+
+/* ── Trust bar ── */
+.trust-bar {
+    background: #111;
+    padding: 11px 0;
+    overflow: hidden;
+    width: 100%;
+}
+.trust-track { display: flex; gap: 56px; animation: marquee 24s linear infinite; white-space: nowrap; }
+.trust-item { display: flex; align-items: center; gap: 9px; font-size: 0.74rem; font-weight: 500; letter-spacing: 0.07em; color: rgba(255,255,255,0.55); flex-shrink: 0; font-family: var(--font-body); }
+.trust-item i { color: var(--brand-gold); }
 @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-@media (max-width: 768px) {
-    #heroSlider { height: 78vh !important; min-height: 460px !important; }
-    #heroSlider .slide-title { font-size: 2.2rem !important; }
-    #heroSlider .scroll-hint { display: none !important; }
+/* ── Promo Banner Row ── */
+.promo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.promo-card {
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 200px;
+    text-decoration: none;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+.promo-card:hover { transform: translateY(-3px); }
+.promo-card.warm { background: linear-gradient(135deg, #c4522a 0%, #e8896a 100%); }
+.promo-card.dark { background: linear-gradient(135deg, #1c1917 0%, #3d2b1c 100%); }
+.promo-tag { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 8px; }
+.promo-card.dark .promo-tag { color: var(--brand-gold); }
+.promo-h { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 6px; }
+.promo-sub { font-size: 0.80rem; color: rgba(255,255,255,0.70); margin-bottom: 18px; }
+.btn-promo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 1.5px solid rgba(255,255,255,0.40);
+    border-radius: 30px;
+    text-decoration: none;
+    width: fit-content;
+    transition: var(--transition);
+}
+.btn-promo:hover { background: rgba(255,255,255,0.30); color: #fff; }
+
+/* ── Featured Highlight Banner ── */
+.featured-banner {
+    background: linear-gradient(120deg, #2a1810 0%, #3d1f12 50%, #1c1917 100%);
+    border-radius: var(--radius-lg);
+    padding: 44px 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 40px;
+}
+.fb-eyebrow { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--brand-gold); margin-bottom: 10px; }
+.fb-title { font-family: var(--font-display); font-size: clamp(1.5rem, 2.5vw, 2.1rem); font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.15; }
+.fb-title em { font-style: italic; color: var(--brand-secondary); }
+.fb-desc { font-size: 0.88rem; color: rgba(255,255,255,0.60); line-height: 1.8; max-width: 420px; }
+.fb-right { display: flex; flex-direction: column; align-items: flex-end; gap: 18px; }
+.fb-badge {
+    background: rgba(212,168,83,0.14);
+    border: 1px solid rgba(212,168,83,0.30);
+    border-radius: var(--radius-md);
+    padding: 14px 22px;
+    text-align: center;
+    white-space: nowrap;
+}
+.fb-badge-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; color: var(--brand-gold); display: block; line-height: 1; }
+.fb-badge-lbl { font-size: 0.68rem; color: rgba(255,255,255,0.50); letter-spacing: 0.10em; margin-top: 4px; display: block; }
+
+/* ── Responsive ── */
+@media (max-width: 991px) {
+    .hero-split { grid-template-columns: 1fr; min-height: auto; }
+    .hero-split .hero-right { grid-template-columns: repeat(4,1fr); grid-template-rows: 1fr; }
+    .hero-split .hero-left { padding: 52px 32px; }
+    .promo-row { grid-template-columns: 1fr; }
+    .featured-banner { grid-template-columns: 1fr; }
+    .fb-right { align-items: flex-start; }
+}
+@media (max-width: 767px) {
+    .hero-split .hero-right { grid-template-columns: repeat(2,1fr); grid-template-rows: 1fr 1fr; }
+    .hero-split .hero-left { padding: 40px 20px; }
     .section-header { flex-wrap: wrap; }
+    .featured-banner { padding: 32px 24px; }
 }
 @media (max-width: 480px) {
-    #heroSlider { height: 85vh !important; }
-    #heroSlider .slide-title { font-size: 1.9rem !important; }
-    .btn-slide-primary, .btn-slide-ghost { padding: 11px 20px !important; font-size: 0.80rem !important; }
+    .hero-split .hero-title { font-size: 2rem; }
+    .hero-split .hero-right { display: none; }
+    .hero-split { grid-template-columns: 1fr; }
 }
 </style>
 
-{{-- ══════ HERO SLIDER ══════ --}}
-<section id="heroSlider">
-    <div class="slide active">
-        <div class="slide-bg" {{-- style="background-image:url('{{ asset('assets/images/hero/slide1.jpg') }}')" --}}></div>
-        <div class="slide-content">
-            <h1 class="slide-title">The Perfect <em>Gift</em><br>Finds You</h1>
-            <p class="slide-desc">Discover curated gifts for every occasion, handpicked to create moments of joy and celebration.</p>
-            <div class="slide-actions">
-                <a href="{{ route('categories') }}" class="btn-slide-primary">Explore Now &nbsp;<i class="fa-solid fa-arrow-right"></i></a>
-                <a href="#products-section" class="btn-slide-ghost"><i class="fa-solid fa-star"></i>&nbsp; Top Deals</a>
-            </div>
+{{-- ══════ PROMO BANNERS ══════ --}}
+<section class="shop-section" style="padding-bottom: 32px;">
+    <div class="container">
+        <div class="promo-row">
+            <a href="{{ route('categories') }}" class="promo-card warm">
+                <div class="promo-tag">Limited Time Offer</div>
+                <div class="promo-h">Birthday &amp; Anniversary<br>Gift Bundles</div>
+                <div class="promo-sub">Save up to 30% on curated gift sets</div>
+                <span class="btn-promo">Shop Bundles &nbsp;<i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+            <a href="{{ route('categories') }}" class="promo-card dark">
+                <div class="promo-tag">✦ New Arrivals</div>
+                <div class="promo-h">Premium Gifting<br>Experience</div>
+                <div class="promo-sub">Luxury wrapping &amp; same-day delivery</div>
+                <span class="btn-promo">Explore Now &nbsp;<i class="fa-solid fa-arrow-right"></i></span>
+            </a>
         </div>
-    </div>
-    <div class="slide">
-        <div class="slide-bg" {{-- style="background-image:url('{{ asset('assets/images/hero/slide2.jpg') }}')" --}}></div>
-        <div class="slide-content">
-            <h1 class="slide-title">Give <em>Joy</em>,<br>Not Just Gifts</h1>
-            <p class="slide-desc">From birthdays to anniversaries — every celebration deserves something extraordinary and memorable.</p>
-            <div class="slide-actions">
-                <a href="{{ route('categories') }}" class="btn-slide-primary">Shop Now &nbsp;<i class="fa-solid fa-arrow-right"></i></a>
-            </div>
-        </div>
-    </div>
-    <div class="slide">
-        <div class="slide-bg" {{-- style="background-image:url('{{ asset('assets/images/hero/slide3.jpg') }}')" --}}></div>
-        <div class="slide-content">
-            <h1 class="slide-title">Celebrate<br><em>Every</em> Moment</h1>
-            <p class="slide-desc">Explore our exclusive collection of premium gifts, thoughtfully designed to make every occasion unforgettable.</p>
-            <div class="slide-actions">
-                <a href="{{ route('categories') }}" class="btn-slide-primary">View Categories &nbsp;<i class="fa-solid fa-arrow-right"></i></a>
-            </div>
-        </div>
-    </div>
-    <div class="slider-controls">
-        <div class="slider-dots">
-            <button class="slider-dot active" data-slide="0" aria-label="Slide 1"></button>
-            <button class="slider-dot"        data-slide="1" aria-label="Slide 2"></button>
-            <button class="slider-dot"        data-slide="2" aria-label="Slide 3"></button>
-        </div>
-        <div class="slider-arrows">
-            <button class="slider-arrow" id="prevSlide" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-            <button class="slider-arrow" id="nextSlide" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
-        </div>
-    </div>
-    <div class="scroll-hint">
-        <div class="scroll-line"></div>
-        <span>Scroll</span>
     </div>
 </section>
 
-<script>
-(function () {
-    var slider = document.getElementById('heroSlider');
-    if (!slider) return;
-    var slides = slider.querySelectorAll('.slide'), dots = slider.querySelectorAll('.slider-dot'), current = 0, timer = null;
-    function goTo(n) { slides[current].classList.remove('active'); dots[current].classList.remove('active'); current = (n + slides.length) % slides.length; slides[current].classList.add('active'); dots[current].classList.add('active'); }
-    function next() { goTo(current + 1); }
-    function prev() { goTo(current - 1); }
-    function startAuto() { clearInterval(timer); timer = setInterval(next, 5000); }
-    document.getElementById('nextSlide').addEventListener('click', function(){ next(); startAuto(); });
-    document.getElementById('prevSlide').addEventListener('click', function(){ prev(); startAuto(); });
-    dots.forEach(function(dot){ dot.addEventListener('click', function(){ goTo(parseInt(this.dataset.slide,10)); startAuto(); }); });
-    var tx = 0;
-    slider.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive:true});
-    slider.addEventListener('touchend',   function(e){ var d=tx-e.changedTouches[0].clientX; if(Math.abs(d)>50){d>0?next():prev();startAuto();} }, {passive:true});
-    slider.addEventListener('mouseenter', function(){ clearInterval(timer); });
-    slider.addEventListener('mouseleave', startAuto);
-    document.addEventListener('keydown', function(e){ if(e.key==='ArrowRight'){next();startAuto();} if(e.key==='ArrowLeft'){prev();startAuto();} });
-    startAuto();
-})();
-</script>
-
-{{-- Trust bar --}}
-<div class="trust-bar">
-    <div class="trust-track">
-        <div class="trust-item"><i class="fa-solid fa-truck-fast"></i> Free Delivery Over Rs. 5000</div>
-        <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Secure Payments</div>
-        <div class="trust-item"><i class="fa-solid fa-gift"></i> Gift Wrapping Available</div>
-        <div class="trust-item"><i class="fa-solid fa-headset"></i> 24/7 Support</div>
-        <div class="trust-item"><i class="fa-solid fa-truck-fast"></i> Free Delivery Over Rs. 5000</div>
-        <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Secure Payments</div>
-        <div class="trust-item"><i class="fa-solid fa-gift"></i> Gift Wrapping Available</div>
-        <div class="trust-item"><i class="fa-solid fa-headset"></i> 24/7 Support</div>
-    </div>
-</div>
-
 
 {{-- ══════ TOP DEALS ══════ --}}
+<div class="container"><div class="section-divider"></div></div>
 <section class="shop-section" id="products-section">
     <div class="container">
         <div class="section-header">
@@ -376,8 +477,31 @@ body { font-family: var(--font-body); background: var(--brand-surface); }
 @endif
 
 
-{{-- ══════ GIFT CATEGORIES ══════ --}}
+{{-- ══════ FEATURED HIGHLIGHT BANNER ══════ --}}
 <div class="container"><div class="section-divider"></div></div>
+<section class="shop-section" style="padding-bottom: 0;">
+    <div class="container">
+        <div class="featured-banner">
+            <div>
+                <div class="fb-eyebrow">✦ Featured Collection</div>
+                <div class="fb-title">Give <em>Joy</em>,<br>Not Just Gifts</div>
+                <p class="fb-desc">From birthdays to anniversaries — every celebration deserves something extraordinary and memorable. Explore our handpicked premium selections.</p>
+            </div>
+            <div class="fb-right">
+                <div class="fb-badge">
+                    <span class="fb-badge-num">500+</span>
+                    <span class="fb-badge-lbl">HAPPY CUSTOMERS</span>
+                </div>
+                <a href="{{ route('categories') }}" class="btn-hero-primary">
+                    Shop Collection &nbsp;<i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{{-- ══════ GIFT CATEGORIES ══════ --}}
 <section class="shop-section">
     <div class="container">
         <div class="section-header">

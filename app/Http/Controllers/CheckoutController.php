@@ -10,6 +10,19 @@ use App\Models\Order;
 
 class CheckoutController extends Controller
 {
+    public function checkoutDirect()
+    {
+        // Get cart items
+        $cartItems = Session::get('cart', []);
+        
+        // Check if cart is empty
+        if (empty($cartItems)) {
+            return redirect()->route('home')->with('error', 'Your cart is empty. Please add items first.');
+        }
+        
+        return view('checkout', compact('cartItems'));
+    }
+    
     public function checkout($slug)
     {
         // Get cart items
@@ -65,7 +78,9 @@ class CheckoutController extends Controller
                 'purchase_order_name' => 'Order ' . $purchaseOrderId,
                 'customer_name' => $request->first_name . ' ' . $request->last_name,
                 'customer_email' => $request->email,
-                'customer_phone' => $phone
+                'customer_phone' => $phone,
+                'return_url' => route('payment.callback'), // Add return URL for callback
+                'website_url' => config('app.url') // Add website URL
             ];
             
             // Store order details in session for callback processing
@@ -89,9 +104,14 @@ class CheckoutController extends Controller
             ];
             Session::put('pending_khalti_order', $orderData);
             
-            // Create payload using KhaltiService
-            $payload = $khaltiService->createPaymentPayload($paymentData);
-            $response = $khaltiService->initiatePayment($payload);
+            // Initiate payment using KhaltiService
+            $response = $khaltiService->initiatePayment($paymentData);
+            
+            // Log the full response for debugging
+            Log::info('Khalti API Response', [
+                'response' => $response,
+                'payment_data' => $paymentData
+            ]);
             
             if (isset($response['payment_url'])) {
                 Log::info('Redirecting directly to Khalti payment URL', [

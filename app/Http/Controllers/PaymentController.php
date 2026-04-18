@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\KhaltiService;
 use App\Models\Order;
-use App\Models\User;
-use App\Mail\PaymentSuccessMail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
@@ -47,9 +44,6 @@ class PaymentController extends Controller
         $response = $this->khaltiService->initiatePayment($payload);
 
         if (isset($response['payment_url'])) {
-            \Log::info('Redirecting to Khalti payment URL: ' . $response['payment_url']);
-            
-            // Direct redirect to Khalti payment URL (no intermediate page)
             return redirect()->away($response['payment_url']);
         }
 
@@ -65,18 +59,17 @@ class PaymentController extends Controller
         $pidx = $request->query('pidx');
 
         if (!$pidx) {
-            return redirect('checkout/product')->with('error', 'Invalid payment request. Pidx missing.');
+            return redirect()->route('home')->with('error', 'Invalid payment request. Pidx missing.');
         }
 
-        $khaltiService = app(\App\Services\KhaltiService::class);
-        $response = $khaltiService->verifyPayment($pidx);
+        $response = $this->khaltiService->lookupPayment($pidx);
 
         if (isset($response['status']) && $response['status'] === 'Completed') {
             
             $pendingOrder = Session::get('pending_khalti_order');
             
             if (!$pendingOrder) {
-                return redirect('checkout/product')->with('error', 'Payment successful, but session expired before saving the order. Please contact support.');
+                return redirect()->route('home')->with('error', 'Payment successful, but session expired before saving the order. Please contact support.');
             }
             
             if (empty($pendingOrder['user_id'])) {
@@ -96,10 +89,9 @@ class PaymentController extends Controller
             
             // Check if payment already exists to prevent duplicates
             $existingPayment = DB::table('payments')->where('pidx', $pidx)->first();
-            $paymentData = null;
             if (!$existingPayment) {
                 // Save out to payments database table as well using session user_id
-                $paymentData = [
+                DB::table('payments')->insert([
                     'transaction_id' => $response['transaction_id'] ?? 'txn_' . uniqid(),
                     'pidx' => $pidx,
                     'user_id' => $pendingOrder['user_id'],
@@ -113,21 +105,7 @@ class PaymentController extends Controller
                     'completed_at' => now(),
                     'created_at' => now(),
                     'updated_at' => now(),
-                ];
-                DB::table('payments')->insert($paymentData);
-            } else {
-                $paymentData = (array) $existingPayment;
-            }
-            
-            // Send payment success email to user
-            try {
-                $user = User::find($pendingOrder['user_id']);
-                if ($user && $user->email) {
-                    Mail::to($user->email)->send(new PaymentSuccessMail($order, (object) $paymentData));
-                }
-            } catch (\Exception $e) {
-                // Log the error but don't stop the payment process
-                \Log::error('Payment success email failed: ' . $e->getMessage());
+                ]);
             }
             
             // Prepare session for success page
@@ -138,7 +116,6 @@ class PaymentController extends Controller
             return redirect()->route('checkout.success')->with('success', 'Order placed successfully with Khalti!');
         }
 
-        $status = $response['status'] ?? $request->query('status', 'failed');
-        return redirect('checkout/product')->with('error', "Payment was {$status}. Please try again or choose a different payment method.");
+        return redirect()->route('home')->with('error', 'Payment failed, expired, or was canceled.');
     }
 }
